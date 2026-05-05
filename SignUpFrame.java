@@ -35,7 +35,6 @@ public class SignUpFrame extends JFrame implements ActionListener {
         passwordPanel.add(passwordField);
         confirmPasswordPanel.add(confirmPasswordLabel);
         confirmPasswordPanel.add(confirmPasswordField);
-        Frame dialog = new Frame();
         panel.add(userPanel);
         panel.add(emailPanel);
         panel.add(passwordPanel);
@@ -55,9 +54,13 @@ public class SignUpFrame extends JFrame implements ActionListener {
             String password = new String(passwordField.getPassword());
             String confirmPassword = new String(confirmPasswordField.getPassword());
             if (password.equals(confirmPassword)) {
-                JOptionPane.showMessageDialog(null, "Inscription réussie pour " + username);
+
+                // Code pour enregistrer les informations de l'utilisateur
+                JOptionPane.showMessageDialog(this, "Inscription réussie!");
+                new LoginFrame().setVisible(true);
+                dispose();
             } else {
-                JOptionPane.showMessageDialog(null, "Les mots de passe ne correspondent pas.");
+                JOptionPane.showMessageDialog(this, "Les mots de passe ne correspondent pas.", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         } else if (e.getSource() == retourBouton) {
             new LivresORD().setVisible(true);

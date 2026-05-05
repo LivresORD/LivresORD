@@ -12,6 +12,7 @@ public class LivresORD extends JFrame implements ActionListener {
     private JButton signUpButton = new JButton("Sign up");
     private JButton loginButton = new JButton("Login");
     private ImageIcon imageIcon = new ImageIcon("images/user.jpg");
+    public boolean isAdmin = false;
     public LivresORD() {
         super("LivresORD");
         userButton.addActionListener(this);
@@ -46,9 +47,11 @@ public class LivresORD extends JFrame implements ActionListener {
         if (e.getSource() == adminButton) {
             adminButton.setBackground(java.awt.Color.decode("#c9c9c9"));
             userButton.setBackground(null);
+            isAdmin = true;
         } else if (e.getSource() == userButton) {
             userButton.setBackground(java.awt.Color.decode("#c9c9c9"));
             adminButton.setBackground(null);
+            isAdmin = false;
         }
         if (e.getSource() == loginButton) {
             new LoginFrame().setVisible(true);
