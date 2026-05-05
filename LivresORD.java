@@ -49,12 +49,6 @@ public class LivresORD extends JFrame implements ActionListener {
         } else if (e.getSource() == userButton) {
             userButton.setBackground(java.awt.Color.decode("#c9c9c9"));
             adminButton.setBackground(null);
-        } else if (e.getSource() == loginButton) {
-            new LoginFrame().setVisible(true);
-            this.dispose();
-        } else if (e.getSource() == signUpButton) {
-            new SignUpFrame().setVisible(true);
-            this.dispose();
         }
         if (e.getSource() == loginButton) {
             new LoginFrame().setVisible(true);

@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class SignUpFrame extends JFrame {
+public class SignUpFrame extends JFrame implements ActionListener {
     private JLabel emailLabel = new JLabel("Courriel:", JLabel.LEFT);
     private JLabel usernameLabel = new JLabel("Nom d'utilisateur:", JLabel.LEFT);
     private JLabel passwordLabel = new JLabel("Mot de passe:", JLabel.LEFT);
@@ -46,28 +46,22 @@ public class SignUpFrame extends JFrame {
 
         add(panel);
 
-        signUpBouton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String username = usernameField.getText();
-                String password = new String(passwordField.getPassword());
-                String confirmPassword = new String(confirmPasswordField.getPassword());
-                if (password.equals(confirmPassword)) {
-                    JOptionPane.showMessageDialog(null, "Inscription réussie pour " + username);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Les mots de passe ne correspondent pas.");
-                }
-            }
-        });
-        retourBouton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new LivresORD().setVisible(true);
-                dispose();
-            }
-        });
+        signUpBouton.addActionListener(this);
+        retourBouton.addActionListener(this);
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new SignUpFrame().setVisible(true));
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == signUpBouton) {
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+            String confirmPassword = new String(confirmPasswordField.getPassword());
+            if (password.equals(confirmPassword)) {
+                JOptionPane.showMessageDialog(null, "Inscription réussie pour " + username);
+            } else {
+                JOptionPane.showMessageDialog(null, "Les mots de passe ne correspondent pas.");
+            }
+        } else if (e.getSource() == retourBouton) {
+            new LivresORD().setVisible(true);
+            dispose();
+        }
     }
 }

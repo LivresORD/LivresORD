@@ -14,7 +14,7 @@ public class LoginFrame extends JFrame {
     private JPanel buttonPanel = new JPanel();
 
     public LoginFrame() {
-        setTitle("Login");
+        super("Se connecter");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300);
         setLocationRelativeTo(null);
@@ -48,8 +48,5 @@ public class LoginFrame extends JFrame {
                 String password = new String(passwordField.getPassword());
             }
         });
-    }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
     }
 }
