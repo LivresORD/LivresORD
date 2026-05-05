@@ -10,6 +10,8 @@ public class LoginFrame extends JFrame {
     private JTextField usernameField = new JTextField(20);
     private JPasswordField passwordField = new JPasswordField(20);
     private JButton loginButton = new JButton("Se connecter");
+    private JButton retourButton = new JButton("Retour");
+    private JPanel buttonPanel = new JPanel();
 
     public LoginFrame() {
         setTitle("Login");
@@ -17,6 +19,13 @@ public class LoginFrame extends JFrame {
         setSize(400, 300);
         setLocationRelativeTo(null);
 
+        retourButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new LivresORD().setVisible(true);
+                dispose();
+            }
+        });
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(3, 1));
         userPanel.add(usernameLabel);
@@ -25,7 +34,10 @@ public class LoginFrame extends JFrame {
         passwordPanel.add(passwordField);
         panel.add(userPanel);
         panel.add(passwordPanel);
-        panel.add(loginButton);
+        buttonPanel.add(loginButton);
+        buttonPanel.add(retourButton);
+        panel.add(buttonPanel);
+        
 
         add(panel);
 

@@ -59,6 +59,13 @@ public class SignUpFrame extends JFrame {
                 }
             }
         });
+        retourBouton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new LivresORD().setVisible(true);
+                dispose();
+            }
+        });
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new SignUpFrame().setVisible(true));
