@@ -16,6 +16,8 @@ public class LivresORD extends JFrame implements ActionListener {
         super("LivresORD");
         userButton.addActionListener(this);
         adminButton.addActionListener(this);
+        signUpButton.addActionListener(this);
+        loginButton.addActionListener(this);
         buttonPanel.add(adminButton);
         buttonPanel.add(userButton);
         loginPanel.add(signUpButton);
@@ -24,10 +26,10 @@ public class LivresORD extends JFrame implements ActionListener {
         imageLabel.setIcon(imageIcon);
         userButton.setLayout(new GridLayout(2, 1));
         userButton.add(imageLabel);
-        userButton.add(new JLabel("Lecteur", JLabel.BOTTOM));
+        userButton.add(new JLabel("Lecteur", SwingConstants.CENTER));
         adminButton.setLayout(new GridLayout(2, 1));
         adminButton.add(imageLabel);
-        adminButton.add(new JLabel("Bibliothecaire", JLabel.BOTTOM));
+        adminButton.add(new JLabel("Bibliothecaire", SwingConstants.CENTER));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 200);
         setVisible(true);
@@ -41,10 +43,25 @@ public class LivresORD extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == userButton) {
-            JOptionPane.showMessageDialog(null, "User login successful!");
-        } else if (e.getSource() == adminButton) {
-            JOptionPane.showMessageDialog(null, "Admin login successful!");
+        if (e.getSource() == adminButton) {
+            adminButton.setBackground(java.awt.Color.decode("#c9c9c9"));
+            userButton.setBackground(null);
+        } else if (e.getSource() == userButton) {
+            userButton.setBackground(java.awt.Color.decode("#c9c9c9"));
+            adminButton.setBackground(null);
+        } else if (e.getSource() == loginButton) {
+            new LoginFrame().setVisible(true);
+            this.dispose();
+        } else if (e.getSource() == signUpButton) {
+            new SignUpFrame().setVisible(true);
+            this.dispose();
+        }
+        if (e.getSource() == loginButton) {
+            new LoginFrame().setVisible(true);
+            this.dispose();
+        } else if (e.getSource() == signUpButton) {
+            new SignUpFrame().setVisible(true);
+            this.dispose();
         }
     }
 
