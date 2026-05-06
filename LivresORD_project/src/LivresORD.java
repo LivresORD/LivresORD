@@ -63,6 +63,7 @@ public class LivresORD extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
+        DatabaseHandler.setupDatabase();
         SwingUtilities.invokeLater(() -> new LivresORD());
     }
 }

@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 import java.sql.*;
+import javax.swing.*;
 
 public class SignUpFrame extends JFrame implements ActionListener {
     private JLabel emailLabel = new JLabel("Courriel:", JLabel.LEFT);
@@ -50,23 +50,45 @@ public class SignUpFrame extends JFrame implements ActionListener {
         retourBouton.addActionListener(this);
     }
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == signUpBouton) {
-            String username = usernameField.getText();
-            String password = new String(passwordField.getPassword());
-            String confirmPassword = new String(confirmPasswordField.getPassword());
-            if (password.equals(confirmPassword)) {
-                try {
-                    
-                // Code pour enregistrer les informations de l'utilisateur
-                JOptionPane.showMessageDialog(this, "Inscription réussie!");
-                new LoginFrame().setVisible(true);
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Les mots de passe ne correspondent pas.", "Erreur", JOptionPane.ERROR_MESSAGE);
-            }
-        } else if (e.getSource() == retourBouton) {
-            new LivresORD().setVisible(true);
-            dispose();
+    if (e.getSource() == signUpBouton) {
+        String user = usernameField.getText();
+        String mail = emailField.getText();
+        String pass = new String(passwordField.getPassword());
+        String confirm = new String(confirmPasswordField.getPassword());
+
+        if (user.isEmpty() || mail.isEmpty() || pass.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.");
+            return;
         }
+
+        if (pass.equals(confirm)) {
+            saveUserToDatabase(user, mail, pass);
+        } else {
+            JOptionPane.showMessageDialog(this, "Les mots de passe ne correspondent pas.");
+        }
+    } else if (e.getSource() == retourBouton) {
+        new LivresORD().setVisible(true);
+        dispose();
     }
+}
+private void saveUserToDatabase(String user, String mail, String pass) {
+    String sql = "INSERT INTO accounts(username, email, password) VALUES(?,?,?)";
+
+    try (Connection conn = DatabaseHandler.connect();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        
+        pstmt.setString(1, user);
+        pstmt.setString(2, mail);
+        pstmt.setString(3, pass);
+        pstmt.executeUpdate();
+
+        JOptionPane.showMessageDialog(this, "Inscription réussie!");
+        new LoginFrame().setVisible(true);
+        dispose();
+
+    } catch (SQLException e) {
+        // If the username already exists, SQLite will throw an error
+        JOptionPane.showMessageDialog(this, "Erreur: Ce nom d'utilisateur existe déjà.");
+    }
+}
 }
