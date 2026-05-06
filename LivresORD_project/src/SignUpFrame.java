@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.sql.*;
 
 public class SignUpFrame extends JFrame implements ActionListener {
     private JLabel emailLabel = new JLabel("Courriel:", JLabel.LEFT);
@@ -54,7 +55,8 @@ public class SignUpFrame extends JFrame implements ActionListener {
             String password = new String(passwordField.getPassword());
             String confirmPassword = new String(confirmPasswordField.getPassword());
             if (password.equals(confirmPassword)) {
-
+                try {
+                    
                 // Code pour enregistrer les informations de l'utilisateur
                 JOptionPane.showMessageDialog(this, "Inscription réussie!");
                 new LoginFrame().setVisible(true);
