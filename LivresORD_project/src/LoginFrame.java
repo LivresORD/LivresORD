@@ -52,7 +52,13 @@ public class LoginFrame extends JFrame implements ActionListener {
             String password = new String(passwordField.getPassword());
 
             if (validateLogin(username, password)) {
+                CurrentUser.setUsername(username);
                 JOptionPane.showMessageDialog(null, "Connexion réussie !");
+                if (CurrentUser.getRole().equals("Bibliothecaire")) {
+                    new VueBibliothecaire().setVisible(true);
+                } else if (CurrentUser.getRole().equals("Lecteur")) {
+                    // new VueLecteur().setVisible(true); 
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Nom d'utilisateur ou mot de passe incorrect.");
                 passwordField.setText("");
