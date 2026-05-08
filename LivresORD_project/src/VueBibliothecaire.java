@@ -29,10 +29,13 @@ public class VueBibliothecaire extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == ajouterLivreButton) {
             new AjouterLivreFrame().setVisible(true);
+            this.dispose();
         //} else if (e.getSource() == supprimerLivreButton) {
         //    new SupprimerLivreFrame().setVisible(true);
+        //    this.dispose();
         //} else if (e.getSource() == modifierLivreButton) {
         //    new ModifierLivreFrame().setVisible(true);
+        //    this.dispose();
         }
     }
 

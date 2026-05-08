@@ -7,13 +7,13 @@ public class LivresORD extends JFrame implements ActionListener {
     // composantes du GUI
     private JLabel utilisateurLabel = new JLabel("Choisissez votre rôle:");
     private JLabel imageLabel = new JLabel();
-    private JButton adminButton = new JButton("Bibliothecaire");
-    private JButton userButton = new JButton("Lecteur");
+    private JButton adminButton = new JButton();
+    private JButton userButton = new JButton();
     private JPanel buttonPanel = new JPanel();
     private JPanel loginPanel = new JPanel();
     private JButton signUpButton = new JButton("Sign up");
     private JButton loginButton = new JButton("Login");
-    private ImageIcon imageIcon = new ImageIcon("images/user.jpg");
+    private ImageIcon imageIcon = new ImageIcon("src/images/user.jpg");
 
     // variable pour stocker le rôle sélectionné
     public Boolean isAdmin = null;
@@ -37,10 +37,10 @@ public class LivresORD extends JFrame implements ActionListener {
         imageLabel.setIcon(imageIcon);
         userButton.setLayout(new GridLayout(2, 1));
         userButton.add(imageLabel);
-        userButton.add(new JLabel("Lecteur", SwingConstants.CENTER));
+        userButton.add(new JLabel("Lecteur"));
         adminButton.setLayout(new GridLayout(2, 1));
         adminButton.add(imageLabel);
-        adminButton.add(new JLabel("Bibliothecaire", SwingConstants.CENTER));
+        adminButton.add(new JLabel("Bibliothecaire"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 200);
         setVisible(true);
