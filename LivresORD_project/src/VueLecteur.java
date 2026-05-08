@@ -5,18 +5,22 @@ import javax.swing.*;
 public class VueLecteur extends JFrame implements ActionListener {
     private JTextField searchbar = new JTextField(20);
     private JButton searchButton = new JButton("🔎");
+    private JButton empreuntsButton = new JButton("Mes emprunts");
     private JPanel searchPanel = new JPanel();
 
     public VueLecteur() {
         setTitle("LivresORD - Lecteur");
-        setSize(400, 200);
+        setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(6, 1));
+        setLocationRelativeTo(null);
 
         searchButton.addActionListener(this);
+        empreuntsButton.addActionListener(this);
 
         searchPanel.add(searchbar);
         searchPanel.add(searchButton);
+        searchPanel.add(empreuntsButton);
         add(searchPanel);
     }
 

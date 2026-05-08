@@ -5,8 +5,9 @@ import javax.swing.*;
 public class LivresORD extends JFrame implements ActionListener {
 
     // composantes du GUI
-    private JLabel utilisateurLabel = new JLabel("Choisissez votre rôle:");
-    private JLabel imageLabel = new JLabel();
+    private JLabel utilisateurLabel = new JLabel("Choisissez votre rôle:", JLabel.CENTER);
+    private JLabel imageLabel1 = new JLabel();
+    private JLabel imageLabel2 = new JLabel();
     private JButton adminButton = new JButton();
     private JButton userButton = new JButton();
     private JPanel buttonPanel = new JPanel();
@@ -31,18 +32,21 @@ public class LivresORD extends JFrame implements ActionListener {
         buttonPanel.add(userButton);
         loginPanel.add(signUpButton);
         loginPanel.add(loginButton);
+        loginButton.setEnabled(false);
+        signUpButton.setEnabled(false);
 
         // redimensionner l'image et l'ajouter au label
         imageIcon.setImage(imageIcon.getImage().getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-        imageLabel.setIcon(imageIcon);
+        imageLabel1.setIcon(imageIcon);
+        imageLabel2.setIcon(imageIcon);
         userButton.setLayout(new GridLayout(2, 1));
-        userButton.add(imageLabel);
+        userButton.add(imageLabel1, JLabel.CENTER);
         userButton.add(new JLabel("Lecteur"));
         adminButton.setLayout(new GridLayout(2, 1));
-        adminButton.add(imageLabel);
+        adminButton.add(imageLabel2, JLabel.CENTER);
         adminButton.add(new JLabel("Bibliothecaire"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(300, 200);
+        setSize(500, 400);
         setVisible(true);
         setLocationRelativeTo(null);
         setLayout(new GridLayout(3, 1));
@@ -58,10 +62,14 @@ public class LivresORD extends JFrame implements ActionListener {
             adminButton.setBackground(java.awt.Color.decode("#c9c9c9"));
             userButton.setBackground(null);
             isAdmin = true;
+            loginButton.setEnabled(true);
+            signUpButton.setEnabled(true);
         } else if (e.getSource() == userButton) {
             userButton.setBackground(java.awt.Color.decode("#c9c9c9"));
             adminButton.setBackground(null);
             isAdmin = false;
+            loginButton.setEnabled(true);
+            signUpButton.setEnabled(true);
         }
         if (e.getSource() == loginButton) {
             new LoginFrame().setVisible(true);

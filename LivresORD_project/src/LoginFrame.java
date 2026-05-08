@@ -56,8 +56,10 @@ public class LoginFrame extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Connexion réussie !");
                 if (CurrentUser.getRole().equals("Bibliothecaire")) {
                     new VueBibliothecaire().setVisible(true);
+                    this.dispose();
                 } else if (CurrentUser.getRole().equals("Lecteur")) {
-                    // new VueLecteur().setVisible(true); 
+                    new VueLecteur().setVisible(true);
+                    this.dispose();
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Nom d'utilisateur ou mot de passe incorrect.");

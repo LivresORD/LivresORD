@@ -59,9 +59,22 @@ public class SignUpFrame extends JFrame implements ActionListener {
         if (user.isEmpty() || mail.isEmpty() || pass.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Veuillez remplir tous les champs.");
             return;
-        }
-
-        if (pass.equals(confirm)) {
+        } else if (!mail.contains("@") || !mail.contains(".")) {
+            JOptionPane.showMessageDialog(this, "Veuillez entrer une adresse e-mail valide.");
+            return;
+        } else if (pass.length() < 6 || pass.length() > 20) {
+            JOptionPane.showMessageDialog(this, "Le mot de passe doit contenir entre 6 et 20 caractères.");
+            return;
+        } else if (user.length() < 3 || user.length() > 15) {
+            JOptionPane.showMessageDialog(this, "Le nom d'utilisateur doit contenir entre 3 et 15 caractères.");
+            return;
+        } else if (pass.contains(" ") || user.contains(" ")) {
+            JOptionPane.showMessageDialog(this, "Le nom d'utilisateur et le mot de passe ne doivent pas contenir d'espaces.");
+            return;
+        } else if (!pass.matches(".*[A-Z].*") || !pass.matches(".*[a-z].*") || !pass.matches(".*\\d.*")) {
+            JOptionPane.showMessageDialog(this, "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre.");
+            return;
+        } else if (pass.equals(confirm)) {
             saveUserToDatabase(user, mail, pass);
         } else {
             JOptionPane.showMessageDialog(this, "Les mots de passe ne correspondent pas.");
