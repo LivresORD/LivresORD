@@ -33,8 +33,8 @@ public class LoginFrame extends JFrame implements ActionListener {
         passwordPanel.add(passwordField);
         panel.add(userPanel);
         panel.add(passwordPanel);
-        buttonPanel.add(loginButton);
         buttonPanel.add(retourButton);
+        buttonPanel.add(loginButton);
         panel.add(buttonPanel);
         
 

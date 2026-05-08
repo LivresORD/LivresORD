@@ -3,6 +3,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class LivresORD extends JFrame implements ActionListener {
+
+    // composantes du GUI
     private JLabel utilisateurLabel = new JLabel("Choisissez votre rôle:");
     private JLabel imageLabel = new JLabel();
     private JButton adminButton = new JButton("Bibliothecaire");
@@ -12,9 +14,15 @@ public class LivresORD extends JFrame implements ActionListener {
     private JButton signUpButton = new JButton("Sign up");
     private JButton loginButton = new JButton("Login");
     private ImageIcon imageIcon = new ImageIcon("images/user.jpg");
+
+    // variable pour stocker le rôle sélectionné
     public Boolean isAdmin = null;
+
+    // constructeur
     public LivresORD() {
         super("LivresORD");
+
+        // ajouter les boutons au frame
         userButton.addActionListener(this);
         adminButton.addActionListener(this);
         signUpButton.addActionListener(this);
@@ -23,6 +31,8 @@ public class LivresORD extends JFrame implements ActionListener {
         buttonPanel.add(userButton);
         loginPanel.add(signUpButton);
         loginPanel.add(loginButton);
+
+        // redimensionner l'image et l'ajouter au label
         imageIcon.setImage(imageIcon.getImage().getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
         imageLabel.setIcon(imageIcon);
         userButton.setLayout(new GridLayout(2, 1));
