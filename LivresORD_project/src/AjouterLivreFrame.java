@@ -258,9 +258,9 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
                         }
 
                     } else if (command.equals("Retourner"))  {
-                        // **************************************************************************
-                        // Continuer cette partie incomplète.............................................................................................
-                        // **************************************************************************
+                        // On retourne à la page d'accueil
+						new VueBibliothecaire().setVisible(true);
+						this.dispose();
                     }
 
                     // On affiche le résultat de l'inscription du formulaire
