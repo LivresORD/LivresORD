@@ -49,7 +49,8 @@ public class VueLecteur extends JFrame implements ActionListener {
         } else {
             JButton boutonSource = (JButton) e.getSource();
             String titreLivre = boutonSource.getText();
-            JOptionPane.showMessageDialog(this, "Vous avez sélectionné: " + titreLivre);
+            new DetailsLivreFrame(titreLivre).setVisible(true);
+            this.dispose();
         }
     }
 
