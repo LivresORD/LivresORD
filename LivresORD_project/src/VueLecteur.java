@@ -10,14 +10,17 @@ public class VueLecteur extends JFrame implements ActionListener {
     private JButton empruntsButton = new JButton("Mes emprunts");
     private JPanel searchPanel = new JPanel();
     private JPanel panneauLivres = new JPanel();
-    private GridLayout leGrid = new GridLayout(1, 4, 10, 10);
+    private JScrollPane scrollPane = new JScrollPane(panneauLivres);
+    private GridLayout leGrid = new GridLayout(0, 4, 10, 10);
 
     public VueLecteur() {
         setTitle("LivresORD - Lecteur");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(3,1));
+        setLayout(new BorderLayout());
         setLocationRelativeTo(null);
+        scrollPane.setViewportView(panneauLivres);
+        panneauLivres.setLayout(leGrid);
         panneauLivres.setBorder(new EmptyBorder(10, 10, 10, 10));
 
 
@@ -26,15 +29,11 @@ public class VueLecteur extends JFrame implements ActionListener {
         searchPanel.add(searchbar);
         searchPanel.add(searchButton);
         searchPanel.add(empruntsButton);
-        add(searchPanel);
-        add(panneauLivres);
-        
-        panneauLivres.setLayout(leGrid);
+        add(searchPanel, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
 
-        panneauLivres.add(new JButton(getTitreFromDatabase(1)));
-        panneauLivres.add(new JButton(getTitreFromDatabase(2)));
-        panneauLivres.add(new JButton(getTitreFromDatabase(3)));
-        panneauLivres.add(new JButton(getTitreFromDatabase(4)));
+        panneauLivres.setLayout(leGrid);
+        loadBooks();
     
     }
     
@@ -44,20 +43,20 @@ public class VueLecteur extends JFrame implements ActionListener {
         JOptionPane.showMessageDialog(this, "Vous avez entré: " + text);
     }
 
-    private String getTitreFromDatabase(int id) {
-        String sql = "SELECT titre FROM books WHERE id = ?";
-        try (Connection conn = DatabaseHandler.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                return rs.getString("titre");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private void loadBooks() {
+    String sql = "SELECT titre FROM books";
+    try (Connection conn = DatabaseHandler.connect();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+
+        while (rs.next()) {
+            panneauLivres.add(new JButton(rs.getString("titre")));
         }
-        return null;
+
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+}
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
