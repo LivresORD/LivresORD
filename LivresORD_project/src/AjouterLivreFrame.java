@@ -3,6 +3,9 @@
 //*******************************************************
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -17,6 +20,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
     private JPanel panelInsertionAuteur = new JPanel();
     private JPanel panelInsertionAnnee = new JPanel();
     private JPanel panelInsertionNombreDePages = new JPanel();
+	private JPanel panelInsertionQuantite = new JPanel();
     private JPanel panelResultatFormulaire = new JPanel();
     private JPanel panelBoutons = new JPanel();
 
@@ -25,6 +29,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
     private JLabel lblInsertionAuteur = new JLabel("Auteur:", JLabel.CENTER);
     private JLabel lblInsertionAnnee = new JLabel("Année de Publication:", JLabel.CENTER);
     private JLabel lblNombreDePages = new JLabel("Nombre de pages:", JLabel.CENTER);
+    private JLabel lblQuantite = new JLabel("Quantité disponible:", JLabel.CENTER);
     private JLabel lblTitreResultatFormulaire = new JLabel("Résultat du formulaire: ", JLabel.CENTER);
     private JLabel lblResultatFormulaire = new JLabel("", JLabel.CENTER);
 
@@ -32,13 +37,14 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
     private JTextField txtInsertionAuteur = new JTextField(20);
     private JTextField txtInsertionAnnee = new JTextField(20);
     private JTextField txtNombreDePages = new JTextField(20);
+    private JTextField txtQuantite = new JTextField(20);
 
     private GridLayout leGrid = new GridLayout(3, 2, 20, 50);
     boolean titreValide, anneeValide, nomValide, nombreDePagesValide;
 
     public AjouterLivreFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(7, 2));
+        setLayout(new GridLayout(8, 2));
         setResizable(false);
         setLocationRelativeTo(null);
 
@@ -47,6 +53,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
         panelInsertionAuteur.setBackground(Color.ORANGE);
         panelInsertionAnnee.setBackground(Color.GRAY);
         panelInsertionNombreDePages.setBackground(Color.WHITE);
+        panelInsertionQuantite.setBackground(Color.LIGHT_GRAY);
         panelResultatFormulaire.setBackground(Color.YELLOW);
         panelBoutons.setBackground(Color.PINK);
 
@@ -88,6 +95,8 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
         panelInsertionAnnee.add(txtInsertionAnnee);
         panelInsertionNombreDePages.add(lblNombreDePages);
         panelInsertionNombreDePages.add(txtNombreDePages);
+		panelInsertionQuantite.add(lblQuantite);
+		panelInsertionQuantite.add(txtQuantite);
         panelResultatFormulaire.add(lblTitreResultatFormulaire);
         panelResultatFormulaire.add(lblResultatFormulaire);
         panelBoutons.add(btnValider);
@@ -99,6 +108,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
         add(panelInsertionAuteur);
         add(panelInsertionAnnee);
         add(panelInsertionNombreDePages);
+        add(panelInsertionQuantite);
         add(panelResultatFormulaire);
         add(panelBoutons);
     }
@@ -111,6 +121,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
                 txtInsertionAuteur.setText("");
                 txtInsertionAnnee.setText("");
                 txtNombreDePages.setText("");
+                txtQuantite.setText("");
             } else if (command.equals("Valider")) {
                 titreValide = anneeValide = nomValide = nombreDePagesValide = true;
 
@@ -152,14 +163,47 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
                     return;
                 }
 
-                lblResultatFormulaire.setText("Votre réponse a été enregistrée avec succès!");
-            } else if (command.equals("Retourner")) {
+                try {
+                    int quantite = Integer.parseInt(txtQuantite.getText());
+                    if (quantite < 0 || quantite > 1000) throw new NumberFormatException();
+                } catch (NumberFormatException e) {
+                    lblResultatFormulaire.setText("ERREUR! Quantité invalide.");
+                    return;
+                }
+
+				if (saveBookToDatabase(txtInsertionTitre.getText(), txtInsertionAuteur.getText(), Integer.parseInt(txtInsertionAnnee.getText()), Integer.parseInt(txtNombreDePages.getText()), Integer.parseInt(txtQuantite.getText()))) {
+					lblResultatFormulaire.setText("Le livre a été ajouté avec succès!");
+				} else {
+					lblResultatFormulaire.setText("ERREUR! Echec de l'ajout du livre à la base de données.");
+				}
+
+			} else if (command.equals("Retourner")) {
 				new VueBibliothecaire().setVisible(true);
                 this.dispose();
             }
             repaint();
         } catch (Exception e) {
             System.out.println("Il y a eu une erreur avec l'inscription.");
+        }
+    }
+
+	private boolean saveBookToDatabase(String title, String author, int year, int pages, int quantite) {
+        String sql = "INSERT INTO books(titre, auteur, annee, nombreDePages, quantiteDisponible) VALUES(?,?,?,?,?)";
+
+        try (Connection conn = DatabaseHandler.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, title);
+            pstmt.setString(2, author);
+            pstmt.setInt(3, year);
+            pstmt.setInt(4, pages);
+            pstmt.setInt(5, quantite);
+            
+            pstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+            return false;
         }
     }
 
