@@ -19,6 +19,7 @@ public class SignUpFrame extends JFrame implements ActionListener {
     private JButton signUpBouton = new JButton("S'inscrire");
     private JButton retourBouton = new JButton("Retour");
     private JPanel panneauBoutons = new JPanel();
+    private String sql;
 
     public SignUpFrame() {
         setTitle("S'inscrire");
@@ -85,7 +86,16 @@ public class SignUpFrame extends JFrame implements ActionListener {
     }
 }
 private void saveUserToDatabase(String user, String mail, String pass) {
-    String sql = "INSERT INTO accounts(username, email, password) VALUES(?,?,?)";
+    if (CurrentUser.getRole() == null) {
+        JOptionPane.showMessageDialog(this, "Erreur: Aucun rôle sélectionné.");
+        new LivresORD().setVisible(true);
+        this.dispose();
+    } else if (CurrentUser.getRole().equals("Bibliothecaire")) {
+        sql = "INSERT INTO comptes_bibliothecaire(username, email, password) VALUES(?,?,?)";
+    } else if (CurrentUser.getRole().equals("Lecteur")) {
+        sql = "INSERT INTO comptes_lecteur(username, email, password) VALUES(?,?,?)";
+    } 
+    
 
     try (Connection conn = DatabaseHandler.connect();
          PreparedStatement pstmt = conn.prepareStatement(sql)) {

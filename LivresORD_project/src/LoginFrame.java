@@ -16,6 +16,7 @@ public class LoginFrame extends JFrame implements ActionListener {
     private JButton loginButton = new JButton("Se connecter");
     private JButton retourButton = new JButton("Retour");
     private JPanel buttonPanel = new JPanel();
+    private String sql;
 
     public LoginFrame() {
         super("Se connecter");
@@ -69,7 +70,16 @@ public class LoginFrame extends JFrame implements ActionListener {
         }
     }
     private boolean validateLogin(String username, String password) {
-        String sql = "SELECT * FROM accounts WHERE username = ? AND password = ?";
+        if (CurrentUser.getRole() == null) {
+            JOptionPane.showMessageDialog(this, "Erreur: Aucun rôle sélectionné.");
+            new LivresORD().setVisible(true);
+            this.dispose();
+            return false;
+        } else if (CurrentUser.getRole().equals("Bibliothecaire")) {
+            sql = "SELECT * FROM comptes_bibliothecaire WHERE username = ? AND password = ?";
+        } else if (CurrentUser.getRole().equals("Lecteur")) {
+            sql = "SELECT * FROM comptes_lecteur WHERE username = ? AND password = ?";
+        }
         try (Connection conn = DatabaseHandler.connect();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             

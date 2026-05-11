@@ -13,12 +13,16 @@ public class DatabaseHandler {
     }
 
     public static void setupDatabase() {
-        String sqlAccounts = "CREATE TABLE IF NOT EXISTS accounts ("
+        String sqlComptesLecteur = "CREATE TABLE IF NOT EXISTS comptes_lecteur ("
+                   + "username TEXT PRIMARY KEY,"
+                   + "email TEXT,"
+                   + "password TEXT);";
+        String sqlComptesBibliothecaire = "CREATE TABLE IF NOT EXISTS comptes_bibliothecaire ("
                    + "username TEXT PRIMARY KEY,"
                    + "email TEXT,"
                    + "password TEXT);";
 
-        String sqlBooks = "CREATE TABLE IF NOT EXISTS books ("
+        String sqlLivres = "CREATE TABLE IF NOT EXISTS books ("
                    + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                    + "titre TEXT,"
                    + "auteur TEXT,"
@@ -28,8 +32,9 @@ public class DatabaseHandler {
 
         try (Connection conn = connect();
              Statement stmt = conn.createStatement()) {
-            stmt.execute(sqlAccounts);
-            stmt.execute(sqlBooks);
+            stmt.execute(sqlComptesLecteur);
+            stmt.execute(sqlComptesBibliothecaire);
+            stmt.execute(sqlLivres);
         } catch (SQLException e) {
             System.out.println("Table creation error: " + e.getMessage());
         }
