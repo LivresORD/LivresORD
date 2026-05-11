@@ -1,6 +1,6 @@
 //*******************************************************
 
-//Programme: Ajouter Livre Frame
+//Programme: Supprimer Livre Frame
 
 //*******************************************************
 
@@ -25,7 +25,7 @@ import javax.swing.border.EmptyBorder;
 
 
 
-public class AjouterLivreFrame extends JFrame implements ActionListener {
+public class SupprimerLivreFrame extends JFrame implements ActionListener {
 
  // On définit le flow
 
@@ -69,7 +69,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
 
  // On construit les labels
 
- private JLabel lblDescription = new JLabel("Ajouter un livre: ", JLabel.CENTER);
+ private JLabel lblDescription = new JLabel("Supprimer un livre: ", JLabel.CENTER);
 
  private JLabel lblInsertionTitre = new JLabel("Titre:", JLabel.CENTER);
 
@@ -123,7 +123,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
 
  // On crée le constructeur
 
- public AjouterLivreFrame() {
+ public SupprimerLivreFrame() {
 
 
 
@@ -251,7 +251,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
 
      // On ajoute des éléments aux panneaux
 
-     setTitle("LivresORD - Ajouter un Livre");
+     setTitle("LivresORD - Supprimer un Livre");
 
      panelDescription.add(lblDescription);
 
@@ -555,6 +555,16 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
 
                      if(titreValide == true && anneeValide == true && nomValide == true && nombreDePagesValide == true) {
 
+                    	 // **************************************************************************
+
+                         // Continuer cette partie incomplète... Il faut ne pas oublier que le livre à supprimer doit înitialement exister dans le système. 
+
+                    	 // Il faut ajouter une dernière condition de validité.
+
+                         // **************************************************************************
+
+                    	 
+
                          // Ici, le formulaire a été rempli avec succès
 
                          lblResultatFormulaire.setText("Vôtre réponse a été enregistré avec succès!");
@@ -609,7 +619,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
 
 
 
-     SwingUtilities.invokeLater(() -> new AjouterLivreFrame().setVisible(true));
+     SwingUtilities.invokeLater(() -> new SupprimerLivreFrame().setVisible(true));
 
 
 
@@ -618,3 +628,4 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
 
 
 } // FIN GUI Package
+
