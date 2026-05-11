@@ -5,7 +5,7 @@ import javax.swing.*;
 public class VueLecteur extends JFrame implements ActionListener {
     private JTextField searchbar = new JTextField(20);
     private JButton searchButton = new JButton("🔎");
-    private JButton empreuntsButton = new JButton("Mes emprunts");
+    private JButton empruntsButton = new JButton("Mes emprunts");
     private JPanel searchPanel = new JPanel();
 
     public VueLecteur() {
@@ -16,11 +16,11 @@ public class VueLecteur extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
 
         searchButton.addActionListener(this);
-        empreuntsButton.addActionListener(this);
+        empruntsButton.addActionListener(this);
 
         searchPanel.add(searchbar);
         searchPanel.add(searchButton);
-        searchPanel.add(empreuntsButton);
+        searchPanel.add(empruntsButton);
         add(searchPanel);
     }
 
