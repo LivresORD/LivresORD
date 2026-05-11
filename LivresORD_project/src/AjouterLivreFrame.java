@@ -154,6 +154,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
 
                 lblResultatFormulaire.setText("Votre réponse a été enregistrée avec succès!");
             } else if (command.equals("Retourner")) {
+				new VueBibliothecaire().setVisible(true);
                 this.dispose();
             }
             repaint();

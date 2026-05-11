@@ -143,6 +143,7 @@ public class SupprimerLivreFrame extends JFrame implements ActionListener {
                 lblResultatFormulaire.setText("Le livre a été supprimé avec succès!");
 
             } else if (command.equals("Retourner")) {
+                new VueBibliothecaire().setVisible(true);
                 this.dispose();
             }
             repaint();
