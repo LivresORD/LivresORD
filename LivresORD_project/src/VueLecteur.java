@@ -33,16 +33,15 @@ public class VueLecteur extends JFrame implements ActionListener {
         add(scrollPane, BorderLayout.CENTER);
 
         panneauLivres.setLayout(leGrid);
-        loadBooks();
+        loadBooks("");
     
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == searchButton) {
-            String query = searchbar.getText();
-            // Implémentez la logique de recherche ici
-            JOptionPane.showMessageDialog(this, "Recherche pour: " + query);
+            String recherche = searchbar.getText();
+            loadBooks(recherche);
         } else if (e.getSource() == empruntsButton) {
             // Implémentez la logique pour afficher les emprunts de l'utilisateur ici
             JOptionPane.showMessageDialog(this, "Affichage des emprunts");
@@ -54,11 +53,14 @@ public class VueLecteur extends JFrame implements ActionListener {
         }
     }
 
-    private void loadBooks() {
-        String sql = "SELECT titre FROM books";
+    private void loadBooks(String recherche) {
+        panneauLivres.removeAll();
+        String sql = "SELECT titre FROM books WHERE titre LIKE ?";
         try (Connection conn = DatabaseHandler.connect();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql)) {
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, "%" + recherche + "%");
+            ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 JButton boutonLivres = new JButton(rs.getString("titre"));
@@ -69,6 +71,8 @@ public class VueLecteur extends JFrame implements ActionListener {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        panneauLivres.revalidate();
+        panneauLivres.repaint();
     }
 
     public static void main(String[] args) {
