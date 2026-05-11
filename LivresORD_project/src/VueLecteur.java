@@ -39,24 +39,36 @@ public class VueLecteur extends JFrame implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        String text = searchbar.getText();
-        JOptionPane.showMessageDialog(this, "Vous avez entré: " + text);
+        if (e.getSource() == searchButton) {
+            String query = searchbar.getText();
+            // Implémentez la logique de recherche ici
+            JOptionPane.showMessageDialog(this, "Recherche pour: " + query);
+        } else if (e.getSource() == empruntsButton) {
+            // Implémentez la logique pour afficher les emprunts de l'utilisateur ici
+            JOptionPane.showMessageDialog(this, "Affichage des emprunts");
+        } else {
+            JButton boutonSource = (JButton) e.getSource();
+            String titreLivre = boutonSource.getText();
+            JOptionPane.showMessageDialog(this, "Vous avez sélectionné: " + titreLivre);
+        }
     }
 
     private void loadBooks() {
-    String sql = "SELECT titre FROM books";
-    try (Connection conn = DatabaseHandler.connect();
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(sql)) {
+        String sql = "SELECT titre FROM books";
+        try (Connection conn = DatabaseHandler.connect();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)) {
 
-        while (rs.next()) {
-            panneauLivres.add(new JButton(rs.getString("titre")));
+            while (rs.next()) {
+                JButton boutonLivres = new JButton(rs.getString("titre"));
+                boutonLivres.addActionListener(this);
+                panneauLivres.add(boutonLivres);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
     }
-}
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
