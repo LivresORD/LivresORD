@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -30,17 +31,32 @@ public class VueLecteur extends JFrame implements ActionListener {
         
         panneauLivres.setLayout(leGrid);
 
-        panneauLivres.add(new JButton("Livre 1"));
-        panneauLivres.add(new JButton("Livre 2"));
-        panneauLivres.add(new JButton("Livre 3"));
-        panneauLivres.add(new JButton("Livre 4"));
+        panneauLivres.add(new JButton(getTitreFromDatabase(1)));
+        panneauLivres.add(new JButton(getTitreFromDatabase(2)));
+        panneauLivres.add(new JButton(getTitreFromDatabase(3)));
+        panneauLivres.add(new JButton(getTitreFromDatabase(4)));
     
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         String text = searchbar.getText();
         JOptionPane.showMessageDialog(this, "Vous avez entré: " + text);
+    }
+
+    private String getTitreFromDatabase(int id) {
+        String sql = "SELECT titre FROM books WHERE id = ?";
+        try (Connection conn = DatabaseHandler.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("titre");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static void main(String[] args) {
