@@ -65,8 +65,18 @@ public class DetailsLivreFrame extends JFrame implements ActionListener {
             new VueLecteur().setVisible(true);
             this.dispose();
         } else if (e.getSource() == emprunterButton) {
-            // Implémentez la logique d'emprunt ici
+            processEmpreunt();
             JOptionPane.showMessageDialog(this, "Vous avez emprunté: " + titreLivre);
+        }
+    }
+    public void processEmpreunt() {
+        String sql = "UPDATE books SET quantiteDisponible = quantiteDisponible - 1 WHERE titre = ?";
+        try (Connection conn = DatabaseHandler.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, titreLivre);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de l'emprunt du livre: " + e.getMessage());
         }
     }
 }
