@@ -10,12 +10,15 @@ public class VueLecteur extends JFrame implements ActionListener {
     private final JButton empruntsButton = new JButton("Mes emprunts");
     private final JPanel searchPanel = new JPanel();
     private final JPanel panneauLivres = new JPanel();
-    private final JScrollPane scrollPane = new JScrollPane(panneauLivres);
     private final GridLayout leGrid = new GridLayout(0, 4, 10, 10);
+    
+    // Source : https://download.java.net/java/early_access/genzgc/docs/api/java.desktop/javax/swing/JScrollPane.html
+    private final JScrollPane scrollPane = new JScrollPane(panneauLivres, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
+    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
     public VueLecteur() {
         setTitle("LivresORD - Lecteur");
-        setSize(600, 400);
+        setSize(1000, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
@@ -64,6 +67,7 @@ public class VueLecteur extends JFrame implements ActionListener {
 
             while (rs.next()) {
                 JButton boutonLivres = new JButton(rs.getString("titre"));
+                boutonLivres.setPreferredSize(new Dimension(100, 50));
                 boutonLivres.addActionListener(this);
                 panneauLivres.add(boutonLivres);
             }
