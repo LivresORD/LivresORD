@@ -74,16 +74,26 @@ public class DetailsLivreFrame extends JFrame implements ActionListener {
         }
     }
     public void processEmpreunt() {
-        String sql = "UPDATE books SET quantiteDisponible = quantiteDisponible - 1 WHERE titre = ?";
+        String updateStock = "UPDATE books SET quantiteDisponible = quantiteDisponible - 1 WHERE titre = ?";
+        String recordEmpreunt = "INSERT INTO emprunts(username, idLivre) VALUES(?, (SELECT id FROM books WHERE titre = ?))";
         if (quantiteDisponible <= 0) {
             JOptionPane.showMessageDialog(this, "Désolé, ce livre n'est pas disponible pour le moment.");
             return;
         }
         try (Connection conn = DatabaseHandler.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, titreLivre);
-            pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Livre emprunté avec succès !");
+             PreparedStatement pstmt1 = conn.prepareStatement(updateStock);
+             PreparedStatement pstmt2 = conn.prepareStatement(recordEmpreunt)) {
+            try { 
+                pstmt1.setString(1, titreLivre);
+                pstmt1.executeUpdate();
+                pstmt2.setString(1, CurrentUser.getUsername());
+                pstmt2.setString(2, titreLivre);
+                pstmt2.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Livre emprunté avec succès !");
+            } catch (SQLException ex) {
+                conn.rollback();
+                System.out.println("Erreur lors de l'emprunt du livre: " + ex.getMessage());
+            }
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'emprunt du livre: " + e.getMessage());
         }

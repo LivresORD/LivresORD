@@ -29,12 +29,18 @@ public class DatabaseHandler {
                    + "annee INTEGER,"
                    + "nombreDePages INTEGER,"
                    + "quantiteDisponible INTEGER);";
+        
+        String sqlEmprunts = "CREATE TABLE IF NOT EXISTS emprunts ("
+                   + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                   + "username TEXT,"
+                   + "idLivre TEXT);";
 
         try (Connection conn = connect();
              Statement stmt = conn.createStatement()) {
             stmt.execute(sqlComptesLecteur);
             stmt.execute(sqlComptesBibliothecaire);
             stmt.execute(sqlLivres);
+            stmt.execute(sqlEmprunts);
         } catch (SQLException e) {
             System.out.println("Table creation error: " + e.getMessage());
         }
