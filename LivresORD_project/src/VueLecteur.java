@@ -5,13 +5,13 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 public class VueLecteur extends JFrame implements ActionListener {
-    private JTextField searchbar = new JTextField(20);
-    private JButton searchButton = new JButton("🔎");
-    private JButton empruntsButton = new JButton("Mes emprunts");
-    private JPanel searchPanel = new JPanel();
-    private JPanel panneauLivres = new JPanel();
-    private JScrollPane scrollPane = new JScrollPane(panneauLivres);
-    private GridLayout leGrid = new GridLayout(0, 4, 10, 10);
+    private final JTextField searchbar = new JTextField(20);
+    private final JButton searchButton = new JButton("🔎");
+    private final JButton empruntsButton = new JButton("Mes emprunts");
+    private final JPanel searchPanel = new JPanel();
+    private final JPanel panneauLivres = new JPanel();
+    private final JScrollPane scrollPane = new JScrollPane(panneauLivres);
+    private final GridLayout leGrid = new GridLayout(0, 4, 10, 10);
 
     public VueLecteur() {
         setTitle("LivresORD - Lecteur");
