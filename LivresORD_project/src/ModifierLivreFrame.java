@@ -236,280 +236,274 @@ public ModifierLivreFrame() {
 }
 
 
-//On gère la réaction du clic du bouton
+ //On gère la réaction du clic du bouton
  public void actionPerformed( ActionEvent actionEvent ) {
  
  // Le programme prend la commande
  String command = actionEvent.getActionCommand(); 
  
  try {
- if (command.equals("Effacer")) {
- // On éfface le formulaire au complet et on met les boîtes textes à vide
- txtInsertionTitre.setText("");
- txtInsertionAuteur.setText("");
- txtInsertionAnnee.setText(""); 
- txtNombreDePages.setText("");
- txtInsertionTitreNouveau.setText("");
- txtInsertionAuteurNouveau.setText("");
- txtInsertionAnneeNouveau.setText(""); 
- txtInsertionNombreDePagesNouveau.setText("");
- txtInsertionQuantiteLivreNouveau.setText("");
- } else if (command.equals("Valider")) {
+	if (command.equals("Effacer")) {
+		// On éfface le formulaire au complet et on met les boîtes textes à vide
+		txtInsertionTitre.setText("");
+		txtInsertionAuteur.setText("");
+		txtInsertionAnnee.setText(""); 
+		txtNombreDePages.setText("");
+		txtInsertionTitreNouveau.setText("");
+		txtInsertionAuteurNouveau.setText("");
+		txtInsertionAnneeNouveau.setText(""); 
+		txtInsertionNombreDePagesNouveau.setText("");
+		txtInsertionQuantiteLivreNouveau.setText("");
+	} else if (command.equals("Valider")) {
+		// On crée des booleans pour la validité des réponses de l'utilisateur
+		titreValide = true;
+		anneeValide = true;
+		nomValide = true;
+		nombreDePagesValide = true;
+		titreNouveauValide = true;
+		anneeNouveauValide = true;
+		nomNouveauValide = true;
+		nombreDePagesNouveauValide = true;
+		quantiteLivreNouveauValide = true;
+		
+
+		// On vérifie qu'il y a bel et bien un titre initiale d'inséré
+		if(txtInsertionTitre.getText().equals("")) {
+			titreValide = false;
+			lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré un titre pour le livre. Svp, révisez vôtre réponse pour le titre initiale du livre.");
+			return;
+		}
+
+		// On vérifie qu'il y a bel et bien un nom d'auteur initial d'inséré
+		if(txtInsertionAuteur.getText().equals("")) {
+			nomValide = false;
+			lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré un nom d'auteur pour le livre. Svp, révisez vôtre réponse pour le nom d'auteur initiale du livre.");
+			return;
+		}
+
+		// On vérifie qu'il y a bel et bien une année de publication initiale insérée
+		if(txtInsertionAnnee.getText().equals("")) {
+			anneeValide = false;
+			lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré une année de publication pour le livre. Svp, révisez vôtre réponse pour l'année de publication initiale du livre.");
+			return;
+		}
 
 
- // On crée des booleans pour la validité des réponses de l'utilisateur
- titreValide = true;
- anneeValide = true;
- nomValide = true;
- nombreDePagesValide = true;
- titreNouveauValide = true;
- anneeNouveauValide = true;
- nomNouveauValide = true;
- nombreDePagesNouveauValide = true;
- quantiteLivreNouveauValide = true;
- 
+		// On vérifie qu'il y a bel et bien un nombre de pages initiale d'inséré
+		if(txtNombreDePages.getText().equals("")) {
+			nombreDePagesValide = false;
+			lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré le nombre de pages pour le livre. Svp, révisez vôtre réponse pour le nombre de pages initiale du livre.");
+			return;
+		}
 
- // On vérifie qu'il y a bel et bien un titre initiale d'inséré
- if(txtInsertionTitre.getText().equals("")) {
- titreValide = false;
- lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré un titre pour le livre. Svp, révisez vôtre réponse pour le titre initiale du livre.");
- return;
- }
+		// On vérifie qu'il y a bel et bien un titre finale d'inséré
+		if(txtInsertionTitreNouveau.getText().equals("")) {
+			titreNouveauValide = false;
+			lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré un titre pour le livre. Svp, révisez vôtre réponse pour le tire finale du livre.");
+			return;
+		}
+		
+		// On vérifie qu'il y a bel et bien un nom d'auteur finale d'inséré
+		if(txtInsertionAuteurNouveau.getText().equals("")) {
+			nomNouveauValide = false;
+			lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré un nom d'auteur pour le livre. Svp, révisez vôtre réponse pour le nom d'auteur finale du livre.");
+			return;
+		}
+		
 
- // On vérifie qu'il y a bel et bien un nom d'auteur initial d'inséré
- if(txtInsertionAuteur.getText().equals("")) {
- nomValide = false;
- lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré un nom d'auteur pour le livre. Svp, révisez vôtre réponse pour le nom d'auteur initiale du livre.");
- return;
- }
+		// On vérifie qu'il y a bel et bien une année de publication finale d'insérée
+		if(txtInsertionAnneeNouveau.getText().equals("")) {
+			anneeNouveauValide = false;
+			lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré une année de publication pour le livre. Svp, révisez vôtre réponse pour l'année de publication finale du livre.");
+			return;
+		}
 
- // On vérifie qu'il y a bel et bien une année de publication initiale insérée
- if(txtInsertionAnnee.getText().equals("")) {
- anneeValide = false;
- lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré une année de publication pour le livre. Svp, révisez vôtre réponse pour l'année de publication initiale du livre.");
- return;
- }
+		
+		// On vérifie qu'il y a bel et bien un nombre de pages finale d'inséré
+		if(txtInsertionNombreDePagesNouveau.getText().equals("")) {
+			nombreDePagesNouveauValide = false;
+			lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré le nombre de pages pour le livre. Svp, révisez vôtre réponse pour le nombre de pages finale du livre.");
+			return;
+		}
+		
+		//On vérifie qu'il y a bel et bien une nouvelle quantité de copies du livre de disponible
+		if(txtInsertionQuantiteLivreNouveau.getText().equals("")) {
+			quantiteLivreNouveauValide = false;
+			lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré le nouveau quantité du livre disponible. Svp, révisez vôtre réponse pour la quantité de livres disponibles.");
+			return;
+		}
 
+		// On vérifie la validité du nom de l'auteur à noter qu'il n'y a pas de restrictions pour le titre du livre
+		if (txtInsertionAuteur.getText().matches("\\d+")) { // source: https://cs.bradpenney.io/essentials/regular_expressions/
+			nomValide = false;
+			lblResultatFormulaire.setText("ERREUR! Le nom de l'auteur doit contenir des lettres. Svp, révisez vôtre réponse pour le nom d'auteur initiale.");
+			return;
+		} else if (!txtInsertionAuteur.getText().matches("[a-zA-ZÀ-ÿ\\s'-]+")) { // source: https://cs.bradpenney.io/essentials/regular_expressions/
+			nomValide = false;
+			lblResultatFormulaire.setText("ERREUR! Le nom de l'auteur doit seulement contenir des lettres et non des nombres. Svp, révisez vôtre réponse pour le nom d'auteur initiale.");
+			return;
+		} else {
+			nomValide = true;
+		}
 
- // On vérifie qu'il y a bel et bien un nombre de pages initiale d'inséré
- if(txtNombreDePages.getText().equals("")) {
- nombreDePagesValide = false;
- lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré le nombre de pages pour le livre. Svp, révisez vôtre réponse pour le nombre de pages initiale du livre.");
- return;
- }
+		// Le nombre d'années ne peut pas être une chaîne de caractères
+		try {
+			Integer.parseInt(txtInsertionAnnee.getText());
+			anneeValide = true;
+		} catch(NumberFormatException e) {
+			anneeValide = false;
+			lblResultatFormulaire.setText("ERREUR! L'année de l'écriture du livre doit être un entier et non une chaîne de caractères. Svp, révisez vôtre réponse pour l'année d'écriture du livre initiale.");
+			return;
+		}
 
- // On vérifie qu'il y a bel et bien un titre finale d'inséré
- if(txtInsertionTitreNouveau.getText().equals("")) {
- titreNouveauValide = false;
- lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré un titre pour le livre. Svp, révisez vôtre réponse pour le tire finale du livre.");
- return;
- }
- 
- // On vérifie qu'il y a bel et bien un nom d'auteur finale d'inséré
- if(txtInsertionAuteurNouveau.getText().equals("")) {
- nomNouveauValide = false;
- lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré un nom d'auteur pour le livre. Svp, révisez vôtre réponse pour le nom d'auteur finale du livre.");
- return;
- }
- 
+		// On vérifie que l'année de publication prenne un temps raisonable
+		if(Integer.parseInt(txtInsertionAnnee.getText()) < -7000000) {
+			anneeValide = false;
+			lblResultatFormulaire.setText("ERREUR! L'année de publication du livre ne peut pas être plus ancien que 7 000 000 avant JC. C'est plus ancien que la première trace connue des humains. Svp, révisez vôtre réponse pour l'année de publication initiale."); //Source: https://www.mnhn.fr/fr/frise-des-lignees-humaines
+			return;
+		} else if(Integer.parseInt(txtInsertionAnnee.getText()) > 2026) {
+			anneeValide = false;
+			lblResultatFormulaire.setText("ERREUR! L'année de publication du livre ne peut pas être plus tard que 2026. Cela serait dans le futur. Svp, révisez vôtre réponse pour l'année de publication initiale."); //Source: https://www.mnhn.fr/fr/frise-des-lignees-humaines
+			return;
+		} else {
+			anneeValide = true;
+		}
 
- // On vérifie qu'il y a bel et bien une année de publication finale d'insérée
- if(txtInsertionAnneeNouveau.getText().equals("")) {
- anneeNouveauValide = false;
- lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré une année de publication pour le livre. Svp, révisez vôtre réponse pour l'année de publication finale du livre.");
- return;
- }
+		// Le nombre de pages ne peut pas être une chaîne de caractères
+		try {
+			Integer.parseInt(txtNombreDePages.getText());
+			nombreDePagesValide = true;
+		} catch(NumberFormatException e) {
+			nombreDePagesValide = false;
+			lblResultatFormulaire.setText("ERREUR! Le nombre de pages du livre doit être un entier et non une chaîne de caractères. Svp, révisez vôtre réponse pour le nombre de pages initiales.");
+			return;
+		}
 
- 
- // On vérifie qu'il y a bel et bien un nombre de pages finale d'inséré
- if(txtInsertionNombreDePagesNouveau.getText().equals("")) {
- nombreDePagesNouveauValide = false;
- lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré le nombre de pages pour le livre. Svp, révisez vôtre réponse pour le nombre de pages finale du livre.");
- return;
- }
- 
- //On vérifie qu'il y a bel et bien une nouvelle quantité de copies du livre de disponible
- if(txtInsertionQuantiteLivreNouveau.getText().equals("")) {
- quantiteLivreNouveauValide = false;
- lblResultatFormulaire.setText("ERREUR! Vous n'avez pas inséré le nouveau quantité du livre disponible. Svp, révisez vôtre réponse pour la quantité de livres disponibles.");
- return;
- }
+		// On vérifie que le nombre de pages n'est pas inférieur à 1 et pas suppérieur à 15 000
+		if(Integer.parseInt(txtNombreDePages.getText()) < 0) {
+			lblResultatFormulaire.setText("ERREUR! Le nombre de pages du livre ne peut pas prendre une valeur négative. Svp, révisez vôtre réponse pour le nombre de pages initiales.");
+			nombreDePagesValide = false;
+			return;
+		} else if(Integer.parseInt(txtNombreDePages.getText()) > 15000) {
+			lblResultatFormulaire.setText("ERREUR! Un livre de plus de 15000 pages bât de manière significative le record de nombre de pages pour un roman. Svp, révisez vôtre réponse pour le nombre de pages initiales."); // Source: https://www.cnews.fr/culture/2026-01-09/voici-les-5-romans-les-plus-longs-au-monde-1798146
+			nombreDePagesValide = false;
+			return;
+		} else {
+			nombreDePagesValide = true;
+		}
 
- // On vérifie la validité du nom de l'auteur à noter qu'il n'y a pas de restrictions pour le titre du livre
- if (txtInsertionAuteur.getText().matches("\\d+")) { // source: https://cs.bradpenney.io/essentials/regular_expressions/
- nomValide = false;
- lblResultatFormulaire.setText("ERREUR! Le nom de l'auteur doit contenir des lettres. Svp, révisez vôtre réponse pour le nom d'auteur initiale.");
- return;
- } else if (!txtInsertionAuteur.getText().matches("[a-zA-ZÀ-ÿ\\s'-]+")) { // source: https://cs.bradpenney.io/essentials/regular_expressions/
- nomValide = false;
- lblResultatFormulaire.setText("ERREUR! Le nom de l'auteur doit seulement contenir des lettres et non des nombres. Svp, révisez vôtre réponse pour le nom d'auteur initiale.");
- return;
- } else {
- nomValide = true;
- }
+		// On vérifie la validité du nom de l'auteur à noter qu'il n'y a pas de restrictions pour le nouveau titre du livre
+		if (txtInsertionAuteurNouveau.getText().matches("\\d+")) { // source: https://cs.bradpenney.io/essentials/regular_expressions/
+			nomNouveauValide = false;
+			lblResultatFormulaire.setText("ERREUR! Le nom de l'auteur doit contenir des lettres. Svp, révisez vôtre réponse pour le nom d'auteur finale.");
+			return;
+		} else if (!txtInsertionAuteurNouveau.getText().matches("[a-zA-ZÀ-ÿ\\s'-]+")) { // source: https://cs.bradpenney.io/essentials/regular_expressions/
+			nomNouveauValide = false;
+			lblResultatFormulaire.setText("ERREUR! Le nom de l'auteur doit seulement contenir des lettres et non des nombres. Svp, révisez vôtre réponse pour le nom d'auteur finale.");
+			return;
+		} else {
+			nomNouveauValide = true;
+		}
 
- // Le nombre d'années ne peut pas être une chaîne de caractères
- try {
- Integer.parseInt(txtInsertionAnnee.getText());
- anneeValide = true;
+		// Le nombre d'années ne peut pas être une chaîne de caractères
+		try {
+			// On vérifie l'entrée du nouveau nombre d'années d'expérience de l'utilisateur
+			Integer.parseInt(txtInsertionAnneeNouveau.getText());
+			anneeNouveauValide = true;
+		} catch(NumberFormatException e) {
+			anneeNouveauValide = false;
+			lblResultatFormulaire.setText("ERREUR! L'année de l'écriture du livre doit être un entier et non une chaîne de caractères. Svp, révisez vôtre réponse pour l'année d'écriture du livre finale.");
+			return;
+		}
 
- } catch(NumberFormatException e) {
- anneeValide = false;
- lblResultatFormulaire.setText("ERREUR! L'année de l'écriture du livre doit être un entier et non une chaîne de caractères. Svp, révisez vôtre réponse pour l'année d'écriture du livre initiale.");
- return;
- }
+		// On vérifie que la nouvelle année de publication prenne un temps raisonable
+		if(Integer.parseInt(txtInsertionAnneeNouveau.getText()) < -7000000) {
+			anneeNouveauValide = false;
+			lblResultatFormulaire.setText("ERREUR! L'année de publication du livre ne peut pas être plus ancien que 7 000 000 avant JC. C'est plus ancien que la première trace connue des humains. Svp, révisez vôtre réponse pour l'année de publication finale."); //Source: https://www.mnhn.fr/fr/frise-des-lignees-humaines
+			return;
+		} else if(Integer.parseInt(txtInsertionAnneeNouveau.getText()) > 2026) {
+			anneeNouveauValide = false;
+			lblResultatFormulaire.setText("ERREUR! L'année de publication du livre ne peut pas être plus tard que 2026. Cela serait dans le futur. Svp, révisez vôtre réponse pour l'année de publication finale."); //Source: https://www.mnhn.fr/fr/frise-des-lignees-humaines
+			return;
+		} else {
+			anneeNouveauValide = true;
+		}
 
- // On vérifie que l'année de publication prenne un temps raisonable
- if(Integer.parseInt(txtInsertionAnnee.getText()) < -7000000) {
- anneeValide = false;
- lblResultatFormulaire.setText("ERREUR! L'année de publication du livre ne peut pas être plus ancien que 7 000 000 avant JC. C'est plus ancien que la première trace connue des humains. Svp, révisez vôtre réponse pour l'année de publication initiale."); //Source: https://www.mnhn.fr/fr/frise-des-lignees-humaines
- return;
- } else if(Integer.parseInt(txtInsertionAnnee.getText()) > 2026) {
- anneeValide = false;
- lblResultatFormulaire.setText("ERREUR! L'année de publication du livre ne peut pas être plus tard que 2026. Cela serait dans le futur. Svp, révisez vôtre réponse pour l'année de publication initiale."); //Source: https://www.mnhn.fr/fr/frise-des-lignees-humaines
- return;
- } else {
- anneeValide = true;
- }
+		// Le nouveau nombre de pages ne peut pas être une chaîne de caractères
+		try {
+			Integer.parseInt(txtInsertionNombreDePagesNouveau.getText());
+			nombreDePagesNouveauValide = true;
+		} catch(NumberFormatException e) {
+			nombreDePagesNouveauValide = false;
+			lblResultatFormulaire.setText("ERREUR! Le nombre de pages du livre doit être un entier et non une chaîne de caractères. Svp, révisez vôtre réponse pour le nombre de pages finales.");
+			return;
+		}
 
- // Le nombre de pages ne peut pas être une chaîne de caractères
- try {
- Integer.parseInt(txtNombreDePages.getText());
- nombreDePagesValide = true;
- 
- } catch(NumberFormatException e) {
- nombreDePagesValide = false;
- lblResultatFormulaire.setText("ERREUR! Le nombre de pages du livre doit être un entier et non une chaîne de caractères. Svp, révisez vôtre réponse pour le nombre de pages initiales.");
- return;
- }
+		// On vérifie que le nouveau nombre de pages n'est pas inférieur à 1 et pas suppérieur à 15 000
+		if(Integer.parseInt(txtInsertionNombreDePagesNouveau.getText()) < 0) {
+			lblResultatFormulaire.setText("ERREUR! Le nombre de pages du livre ne peut pas prendre une valeur négative. Svp, révisez vôtre réponse pour le nombre de pages finales.");
+			nombreDePagesNouveauValide = false;
+			return;
+		} else if(Integer.parseInt(txtInsertionNombreDePagesNouveau.getText()) > 15000) {
+			lblResultatFormulaire.setText("ERREUR! Un livre de plus de 15000 pages bât de manière significative le record de nombre de pages pour un roman. Svp, révisez vôtre réponse pour le nombre de pages finales."); // Source: https://www.cnews.fr/culture/2026-01-09/voici-les-5-romans-les-plus-longs-au-monde-1798146
+			nombreDePagesNouveauValide = false;
+			return;
+		} else {
+			nombreDePagesNouveauValide = true;
+		}
 
- // On vérifie que le nombre de pages n'est pas inférieur à 1 et pas suppérieur à 15 000
- if(Integer.parseInt(txtNombreDePages.getText()) < 0) {
- lblResultatFormulaire.setText("ERREUR! Le nombre de pages du livre ne peut pas prendre une valeur négative. Svp, révisez vôtre réponse pour le nombre de pages initiales.");
- nombreDePagesValide = false;
- return;
- } else if(Integer.parseInt(txtNombreDePages.getText()) > 15000) {
- lblResultatFormulaire.setText("ERREUR! Un livre de plus de 15000 pages bât de manière significative le record de nombre de pages pour un roman. Svp, révisez vôtre réponse pour le nombre de pages initiales."); // Source: https://www.cnews.fr/culture/2026-01-09/voici-les-5-romans-les-plus-longs-au-monde-1798146
- nombreDePagesValide = false;
- return;
- } else {
- nombreDePagesValide = true;
- }
+		//La nouvelle quantité de livres disponibles ne peut pas être une chaîne de caractères
+		try {
+			Integer.parseInt(txtInsertionQuantiteLivreNouveau.getText());
+			quantiteLivreNouveauValide = true;
+		} catch(NumberFormatException e) {
+			quantiteLivreNouveauValide = false;
+			lblResultatFormulaire.setText("ERREUR! La quantité du nombre de livres disponible doit être un entier et non une chaîne de caractères. Svp, révisez vôtre réponse pour la quantité de livres disponibles finales.");
+			return;
+		}
 
- // On vérifie la validité du nom de l'auteur à noter qu'il n'y a pas de restrictions pour le nouveau titre du livre
- if (txtInsertionAuteurNouveau.getText().matches("\\d+")) { // source: https://cs.bradpenney.io/essentials/regular_expressions/
- nomNouveauValide = false;
- lblResultatFormulaire.setText("ERREUR! Le nom de l'auteur doit contenir des lettres. Svp, révisez vôtre réponse pour le nom d'auteur finale.");
- return;
- } else if (!txtInsertionAuteurNouveau.getText().matches("[a-zA-ZÀ-ÿ\\s'-]+")) { // source: https://cs.bradpenney.io/essentials/regular_expressions/
- nomNouveauValide = false;
- lblResultatFormulaire.setText("ERREUR! Le nom de l'auteur doit seulement contenir des lettres et non des nombres. Svp, révisez vôtre réponse pour le nom d'auteur finale.");
- return;
- } else {
- nomNouveauValide = true;
- }
+		// On vérifie que la nouvelle quantité de livres n'est pas inférieur à 1 et pas suppérieur à 7 milliards de copies
+		if(Integer.parseInt(txtInsertionQuantiteLivreNouveau.getText()) < 0) {
+			lblResultatFormulaire.setText("ERREUR! Le nombre livres disponible ne peut pas prendre une valeur négative. Svp, révisez vôtre réponse pour le nombre de livres disponibles finales.");
+			quantiteLivreNouveauValide = false;
+			return;
+		} else if (Integer.parseInt(txtInsertionQuantiteLivreNouveau.getText()) > (7* Math.pow(10, 9))) { // Source: https://magazine.1000libraries.com/the-10-best-selling-books-in-history/
+			lblResultatFormulaire.setText("ERREUR! Un livre ayant plus de 7 000 000 000 copies vendues bât de manière significative le record mondial. Svp, révisez vôtre réponse pour la quantité de livres disponibles."); 
+			quantiteLivreNouveauValide = false;
+			return;
+		} else {
+			quantiteLivreNouveauValide = true;
+		}
 
- // Le nombre d'années ne peut pas être une chaîne de caractères
- try {
- // On vérifie l'entrée du nouveau nombre d'années d'expérience de l'utilisateur
- Integer.parseInt(txtInsertionAnneeNouveau.getText());
- anneeNouveauValide = true;
- 
- } catch(NumberFormatException e) {
- anneeNouveauValide = false;
- lblResultatFormulaire.setText("ERREUR! L'année de l'écriture du livre doit être un entier et non une chaîne de caractères. Svp, révisez vôtre réponse pour l'année d'écriture du livre finale.");
- return;
- }
+		// On affiche le résultat du formulaire
+		if(titreValide == true && anneeValide == true && nomValide == true && nombreDePagesValide == true && titreNouveauValide == true && anneeNouveauValide == true && nomNouveauValide == true && nombreDePagesNouveauValide == true && quantiteLivreNouveauValide == true) {
+			
+			// **************************************************************************
+			// Continuer cette partie incomplète... Il faut ne pas oublier que le livre à Modifier doit înitialement exister dans le système. 
+			// Il faut ajouter une dernière condition de validité.
+			// **************************************************************************
+			
+			// Ici, le formulaire a été rempli avec succès
+			lblResultatFormulaire.setText("Vôtre réponse a été enregistré avec succès!");
 
- // On vérifie que la nouvelle année de publication prenne un temps raisonable
- if(Integer.parseInt(txtInsertionAnneeNouveau.getText()) < -7000000) {
- anneeNouveauValide = false;
- lblResultatFormulaire.setText("ERREUR! L'année de publication du livre ne peut pas être plus ancien que 7 000 000 avant JC. C'est plus ancien que la première trace connue des humains. Svp, révisez vôtre réponse pour l'année de publication finale."); //Source: https://www.mnhn.fr/fr/frise-des-lignees-humaines
- return;
- } else if(Integer.parseInt(txtInsertionAnneeNouveau.getText()) > 2026) {
- anneeNouveauValide = false;
- lblResultatFormulaire.setText("ERREUR! L'année de publication du livre ne peut pas être plus tard que 2026. Cela serait dans le futur. Svp, révisez vôtre réponse pour l'année de publication finale."); //Source: https://www.mnhn.fr/fr/frise-des-lignees-humaines
- return;
- } else {
- anneeNouveauValide = true;
- }
-
- // Le nouveau nombre de pages ne peut pas être une chaîne de caractères
- try {
- Integer.parseInt(txtInsertionNombreDePagesNouveau.getText());
- nombreDePagesNouveauValide = true;
-
- } catch(NumberFormatException e) {
- nombreDePagesNouveauValide = false;
- lblResultatFormulaire.setText("ERREUR! Le nombre de pages du livre doit être un entier et non une chaîne de caractères. Svp, révisez vôtre réponse pour le nombre de pages finales.");
- return;
- }
-
- // On vérifie que le nouveau nombre de pages n'est pas inférieur à 1 et pas suppérieur à 15 000
- if(Integer.parseInt(txtInsertionNombreDePagesNouveau.getText()) < 0) {
- lblResultatFormulaire.setText("ERREUR! Le nombre de pages du livre ne peut pas prendre une valeur négative. Svp, révisez vôtre réponse pour le nombre de pages finales.");
- nombreDePagesNouveauValide = false;
- return;
- } else if(Integer.parseInt(txtInsertionNombreDePagesNouveau.getText()) > 15000) {
- lblResultatFormulaire.setText("ERREUR! Un livre de plus de 15000 pages bât de manière significative le record de nombre de pages pour un roman. Svp, révisez vôtre réponse pour le nombre de pages finales."); // Source: https://www.cnews.fr/culture/2026-01-09/voici-les-5-romans-les-plus-longs-au-monde-1798146
- nombreDePagesNouveauValide = false;
- return;
- } else {
- nombreDePagesNouveauValide = true;
- }
-
-//La nouvelle quantité de livres disponibles ne peut pas être une chaîne de caractères
-try {
-Integer.parseInt(txtInsertionQuantiteLivreNouveau.getText());
-quantiteLivreNouveauValide = true;
-
-} catch(NumberFormatException e) {
-	quantiteLivreNouveauValide = false;
-lblResultatFormulaire.setText("ERREUR! La quantité du nombre de livres disponible doit être un entier et non une chaîne de caractères. Svp, révisez vôtre réponse pour la quantité de livres disponibles finales.");
-return;
-}
-
-// On vérifie que la nouvelle quantité de livres n'est pas inférieur à 1 et pas suppérieur à 7 milliards de copies
-if(Integer.parseInt(txtInsertionQuantiteLivreNouveau.getText()) < 0) {
-lblResultatFormulaire.setText("ERREUR! Le nombre livres disponible ne peut pas prendre une valeur négative. Svp, révisez vôtre réponse pour le nombre de livres disponibles finales.");
-quantiteLivreNouveauValide = false;
-return;
-} else if(Integer.parseInt(txtInsertionQuantiteLivreNouveau.getText()) > (7* Math.pow(10, 9))) { // Source: https://magazine.1000libraries.com/the-10-best-selling-books-in-history/
-lblResultatFormulaire.setText("ERREUR! Un livre ayant plus de 7 000 000 000 copies vendues bât de manière significative le record mondial. Svp, révisez vôtre réponse pour la quantité de livres disponibles."); 
-quantiteLivreNouveauValide = false;
-return;
-} else {
-	quantiteLivreNouveauValide = true;
-}
-
- // On affiche le résultat du formulaire
- if(titreValide == true && anneeValide == true && nomValide == true && nombreDePagesValide == true && titreNouveauValide == true && anneeNouveauValide == true && nomNouveauValide == true && nombreDePagesNouveauValide == true && quantiteLivreNouveauValide == true) {
- // **************************************************************************
- // Continuer cette partie incomplète... Il faut ne pas oublier que le livre à Modifier doit înitialement exister dans le système. 
- // Il faut ajouter une dernière condition de validité.
- // **************************************************************************
- 
- // Ici, le formulaire a été rempli avec succès
- lblResultatFormulaire.setText("Vôtre réponse a été enregistré avec succès!");
-
- } else {
- // Ici, le formulaire n'a pas été rempli avec succès
- lblResultatFormulaire.setText("Malheureusement, il y a eu des erreurs lors de l'inscription!");
- }
+		} else {
+			// Ici, le formulaire n'a pas été rempli avec succès
+			lblResultatFormulaire.setText("Malheureusement, il y a eu des erreurs lors de l'inscription!");
+		}
 
 
- } else if (command.equals("Retourner")) {
-	new VueBibliothecaire().setVisible(true);
-	this.dispose();
- }
+	} else if (command.equals("Retourner")) {
+		new VueBibliothecaire().setVisible(true);
+		this.dispose();
+	}
 
 
- // On affiche le résultat de l'inscription du formulaire
- repaint();
+	// On affiche le résultat de l'inscription du formulaire
+	repaint();
 
  } catch (Exception e) {
- // Ici, l'entrée de l'utilisateur n'est pas valide
- System.out.println("Il y a eu une erreur avec l'inscription du fichier.");
+	// Ici, l'entrée de l'utilisateur n'est pas valide
+	System.out.println("Il y a eu une erreur avec l'inscription du fichier.");
  }
 } //fin actionPerformed 
 
