@@ -12,6 +12,7 @@ public class DetailsLivreFrame extends JFrame implements ActionListener {
     private JButton boutonRetour;
     private JButton emprunterButton;
     private String titreLivre;
+    private int quantiteDisponible;
 
     public DetailsLivreFrame(String titre) {
         this.titreLivre = titre;
@@ -55,6 +56,7 @@ public class DetailsLivreFrame extends JFrame implements ActionListener {
                 anneeLabel.setText("Année: " + rs.getInt("annee"));
                 pagesLabel.setText("Nombre de Pages: " + rs.getInt("nombreDePages"));
                 quantiteLabel.setText("Quantité Disponible: " + rs.getInt("quantiteDisponible"));
+                quantiteDisponible = rs.getInt("quantiteDisponible");
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors du chargement des détails du livre: " + e.getMessage());
@@ -66,15 +68,22 @@ public class DetailsLivreFrame extends JFrame implements ActionListener {
             this.dispose();
         } else if (e.getSource() == emprunterButton) {
             processEmpreunt();
-            JOptionPane.showMessageDialog(this, "Vous avez emprunté: " + titreLivre);
+            loadBookDetails();
+            revalidate();
+            repaint();
         }
     }
     public void processEmpreunt() {
         String sql = "UPDATE books SET quantiteDisponible = quantiteDisponible - 1 WHERE titre = ?";
+        if (quantiteDisponible <= 0) {
+            JOptionPane.showMessageDialog(this, "Désolé, ce livre n'est pas disponible pour le moment.");
+            return;
+        }
         try (Connection conn = DatabaseHandler.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, titreLivre);
             pstmt.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Livre emprunté avec succès !");
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'emprunt du livre: " + e.getMessage());
         }
