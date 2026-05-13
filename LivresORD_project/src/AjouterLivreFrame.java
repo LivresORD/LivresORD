@@ -46,7 +46,6 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
 
     private JButton btnImporterImage = new JButton("Importer une image de couverture");
 
-    private GridLayout leGrid = new GridLayout(3, 2, 20, 50);
     boolean titreValide, anneeValide, nomValide, nombreDePagesValide;
 
     public AjouterLivreFrame() {
