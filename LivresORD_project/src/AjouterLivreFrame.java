@@ -152,7 +152,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
                     return;
                 }
 
-                if (!txtInsertionAuteur.getText().matches("[a-zA-ZÀ-ÿ\\s'-]+")) {
+                if (!txtInsertionAuteur.getText().matches("^[a-zA-ZÀ-ÿ\\s\\.-]+$")) {
                     lblResultatFormulaire.setText("ERREUR! Nom de l'auteur invalide.");
                     return;
                 }
