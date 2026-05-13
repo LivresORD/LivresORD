@@ -46,8 +46,8 @@ public class VueLecteur extends JFrame implements ActionListener {
             String recherche = searchbar.getText();
             loadBooks(recherche);
         } else if (e.getSource() == empruntsButton) {
-            // Implémentez la logique pour afficher les emprunts de l'utilisateur ici
-            JOptionPane.showMessageDialog(this, "Affichage des emprunts");
+            new EmpruntsFrame().setVisible(true);
+            this.dispose();
         } else {
             JButton boutonSource = (JButton) e.getSource();
             String titreLivre = boutonSource.getText();

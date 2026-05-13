@@ -84,18 +84,39 @@ public class DetailsLivreFrame extends JFrame implements ActionListener {
              PreparedStatement pstmt1 = conn.prepareStatement(updateStock);
              PreparedStatement pstmt2 = conn.prepareStatement(recordEmpreunt)) {
             try { 
-                pstmt1.setString(1, titreLivre);
-                pstmt1.executeUpdate();
-                pstmt2.setString(1, CurrentUser.getUsername());
-                pstmt2.setString(2, titreLivre);
-                pstmt2.executeUpdate();
-                JOptionPane.showMessageDialog(this, "Livre emprunté avec succès !");
+                if (alreadyBorrowed()) {
+                    JOptionPane.showMessageDialog(this, "Vous avez déjà emprunté ce livre.");
+                    return;
+                } else {
+                    pstmt1.setString(1, titreLivre);
+                    pstmt1.executeUpdate();
+                    pstmt2.setString(1, CurrentUser.getUsername());
+                    pstmt2.setString(2, titreLivre);
+                    pstmt2.executeUpdate();
+                    JOptionPane.showMessageDialog(this, "Livre emprunté avec succès !");
+                }
             } catch (SQLException ex) {
                 conn.rollback();
                 System.out.println("Erreur lors de l'emprunt du livre: " + ex.getMessage());
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'emprunt du livre: " + e.getMessage());
+        }
+    }
+    private boolean alreadyBorrowed() {
+        String sql = "SELECT * FROM emprunts WHERE username = ? AND idLivre = " +
+                    "(SELECT id FROM books WHERE titre = ?)";
+        try (Connection conn = DatabaseHandler.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, CurrentUser.getUsername());
+            pstmt.setString(2, titreLivre);
+            ResultSet rs = pstmt.executeQuery();
+            
+            return rs.next(); // Returns true if the user already has this book
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return true; 
         }
     }
 }
