@@ -8,6 +8,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 
 public class AjouterLivreFrame extends JFrame implements ActionListener {
     private FlowLayout leFlow = new FlowLayout();
@@ -21,6 +25,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
     private JPanel panelInsertionAnnee = new JPanel();
     private JPanel panelInsertionNombreDePages = new JPanel();
 	private JPanel panelInsertionQuantite = new JPanel();
+    private JPanel panelImage = new JPanel();
     private JPanel panelResultatFormulaire = new JPanel();
     private JPanel panelBoutons = new JPanel();
 
@@ -39,12 +44,14 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
     private JTextField txtNombreDePages = new JTextField(20);
     private JTextField txtQuantite = new JTextField(20);
 
+    private JButton btnImporterImage = new JButton("Importer une image de couverture");
+
     private GridLayout leGrid = new GridLayout(3, 2, 20, 50);
     boolean titreValide, anneeValide, nomValide, nombreDePagesValide;
 
     public AjouterLivreFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(8, 2));
+        setLayout(new GridLayout(9, 2));
         setResizable(false);
         setLocationRelativeTo(null);
 
@@ -81,6 +88,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
         btnValider.addActionListener(this);
         btnEffacer.addActionListener(this);
         btnRetourner.addActionListener(this);
+        btnImporterImage.addActionListener(e -> importImage()); // Source: https://stackoverflow.com/questions/284899/how-do-you-add-an-actionlistener-onto-a-jbutton-in-java
 
         setSize(1000, 600);
         setLocationRelativeTo(null);
@@ -102,6 +110,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
         panelBoutons.add(btnValider);
         panelBoutons.add(btnEffacer);
         panelBoutons.add(btnRetourner);
+        panelImage.add(btnImporterImage);
 
         add(panelDescription);
         add(panelInsertionTitre);
@@ -109,6 +118,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
         add(panelInsertionAnnee);
         add(panelInsertionNombreDePages);
         add(panelInsertionQuantite);
+        add(panelImage);
         add(panelResultatFormulaire);
         add(panelBoutons);
     }
@@ -204,6 +214,25 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
         } catch (SQLException e) {
             System.out.println("SQL Error: " + e.getMessage());
             return false;
+        }
+    }
+
+    // Méthode pour importer une image de couverture
+    // Source: https://docs.oracle.com/javase/8/docs/api/javax/swing/JFileChooser.html
+    public void importImage() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png", "bmp"));
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            try {
+                BufferedImage image = ImageIO.read(selectedFile);
+                // Vous pouvez maintenant utiliser l'image, par exemple l'afficher dans un JLabel
+                JLabel imageLabel = new JLabel(new ImageIcon(image));
+                JOptionPane.showMessageDialog(this, imageLabel, "Image Importée", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Erreur lors de l'importation de l'image: " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
