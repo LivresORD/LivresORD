@@ -14,7 +14,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
 public class AjouterLivreFrame extends JFrame implements ActionListener {
-    private FlowLayout leFlow = new FlowLayout();
     private JButton btnValider = new JButton("Valider");
     private JButton btnEffacer = new JButton("Effacer");
     private JButton btnRetourner = new JButton("Retourner");
@@ -226,7 +225,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
             File selectedFile = fileChooser.getSelectedFile();
             try {
                 BufferedImage image = ImageIO.read(selectedFile);
-                // Vous pouvez maintenant utiliser l'image, par exemple l'afficher dans un JLabel
+                // Afficher l'image importée
                 JLabel imageLabel = new JLabel(new ImageIcon(image));
                 JOptionPane.showMessageDialog(this, imageLabel, "Image Importée", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception e) {
