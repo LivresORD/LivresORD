@@ -86,7 +86,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
         btnValider.addActionListener(this);
         btnEffacer.addActionListener(this);
         btnRetourner.addActionListener(this);
-        btnImporterImage.addActionListener(e -> importImage()); // Source: https://stackoverflow.com/questions/284899/how-do-you-add-an-actionlistener-onto-a-jbutton-in-java
+        btnImporterImage.addActionListener(e -> importerEtSauvegarderImage()); // Source: https://stackoverflow.com/questions/284899/how-do-you-add-an-actionlistener-onto-a-jbutton-in-java
 
         setSize(1000, 600);
         setLocationRelativeTo(null);
@@ -180,7 +180,9 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
                 }
 
 				if (saveBookToDatabase(txtInsertionTitre.getText(), txtInsertionAuteur.getText(), Integer.parseInt(txtInsertionAnnee.getText()), Integer.parseInt(txtNombreDePages.getText()), Integer.parseInt(txtQuantite.getText()))) {
-					lblResultatFormulaire.setText("Le livre a été ajouté avec succès!");
+                    JOptionPane.showMessageDialog(this, "Le livre a été ajouté avec succès!", "Succès", JOptionPane.INFORMATION_MESSAGE);
+                    new VueBibliothecaire().setVisible(true);
+                    this.dispose();
 				} else {
 					lblResultatFormulaire.setText("ERREUR! Echec de l'ajout du livre à la base de données.");
 				}
@@ -215,21 +217,53 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
         }
     }
 
-    // Méthode pour importer une image de couverture
+    // Méthode pour importer et sauvegarder une image de couverture
     // Source: https://docs.oracle.com/javase/8/docs/api/javax/swing/JFileChooser.html
-    public void importImage() {
+    // Source: https://docs.oracle.com/javase/tutorial/2d/images/saveimage.html
+    public void importerEtSauvegarderImage() {
+        // Récupérer et valider le titre saisi par l'utilisateur
+        String fileTitle = txtInsertionTitre.getText().trim();
+        if (fileTitle.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Veuillez d'abord saisir un titre pour l'image.", "Erreur", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Nettoyer le titre des caractères interdits dans les noms de fichiers
+        fileTitle = fileTitle.replaceAll("[\\\\/:*?\"<>|]", "_");
+
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png", "bmp"));
+        
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
             try {
+                // Détecter l'extension d'origine
+                String originalName = selectedFile.getName();
+                String extension = originalName.substring(originalName.lastIndexOf(".") + 1).toLowerCase();
+                
                 BufferedImage image = ImageIO.read(selectedFile);
+                
                 // Afficher l'image importée
                 JLabel imageLabel = new JLabel(new ImageIcon(image));
                 JOptionPane.showMessageDialog(this, imageLabel, "Image Importée", JOptionPane.INFORMATION_MESSAGE);
+                
+                // Définir le chemin vers le dossier de destination "images"
+                // Crée le dossier à la racine du projet s'il n'existe pas
+                File destinationFolder = new File("images");
+                if (!destinationFolder.exists()) {
+                    destinationFolder.mkdirs();
+                }
+                
+                // Forcer le nouveau fichier avec le titre et l'extension dans ce dossier
+                File fileToSave = new File(destinationFolder, fileTitle + "." + extension);
+                
+                // Sauvegarder automatiquement
+                ImageIO.write(image, extension, fileToSave);
+                JOptionPane.showMessageDialog(this, "Image copiée dans /images/" + fileTitle + "." + extension, "Succès", JOptionPane.INFORMATION_MESSAGE);
+                
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Erreur lors de l'importation de l'image: " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Erreur lors du traitement de l'image: " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
