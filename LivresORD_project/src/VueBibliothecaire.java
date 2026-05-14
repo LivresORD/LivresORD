@@ -1,45 +1,150 @@
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 public class VueBibliothecaire extends JFrame implements ActionListener {
-    private JLabel TitreLabel = new JLabel("Gestion des Livres", JLabel.CENTER);
-    private JButton ajouterLivreButton = new JButton("Ajouter un Livre");
-    private JButton supprimerLivreButton = new JButton("Supprimer un Livre");
-    private JButton modifierLivreButton = new JButton("Modifier un Livre");
-    private JPanel buttonPanel = new JPanel();
+    private final JTextField searchbar = new JTextField(20);
+    private final JButton searchButton = new JButton("🔎");
+    private final JButton ajouterLivreButton = new JButton("Ajouter un livre");
+    private final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+    
+    private final JPanel headerPanel = new JPanel(new BorderLayout());
+    private final JLabel lblTitrePrincipal = new JLabel("Bibliothèque LivresORD");
+    
+    private final JPanel topExtrasPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    private final JButton btnDeconnexion = new JButton("Déconnexion");
+    
+    // Added a placeholder panel to balance the left side for perfect centering
+    private final JPanel leftPlaceholder = new JPanel();
+    
+    private final JPanel searchPanel = new JPanel();
+    private final JPanel panneauLivres = new JPanel();
+    private final GridLayout leGrid = new GridLayout(0, 4, 15, 15);
+    private final JPanel containerPanel = new JPanel(new BorderLayout());
+
+    private final JScrollPane scrollPane = new JScrollPane(containerPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
+    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
     public VueBibliothecaire() {
         setTitle("LivresORD - Bibliothécaire");
+        setSize(1000, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 300);
+        setLayout(new BorderLayout());
         setLocationRelativeTo(null);
-        add(TitreLabel);
-        buttonPanel.add(ajouterLivreButton);
-        buttonPanel.add(supprimerLivreButton);
-        buttonPanel.add(modifierLivreButton);
-        add(buttonPanel, "South");
+        
+        lblTitrePrincipal.setFont(new Font("Serif", Font.BOLD, 28));
+        lblTitrePrincipal.setForeground(new Color(44, 62, 80));
+        lblTitrePrincipal.setHorizontalAlignment(JLabel.CENTER);
+        lblTitrePrincipal.setBorder(new EmptyBorder(20, 0, 10, 0));
+
+        topExtrasPanel.setOpaque(false);
+        topExtrasPanel.setBorder(new EmptyBorder(10, 0, 0, 15)); 
+        btnDeconnexion.setPreferredSize(new Dimension(120, 30));
+        topExtrasPanel.add(btnDeconnexion);
+
+        // Styling and adding the placeholder to balance the layout
+        leftPlaceholder.setOpaque(false);
+        leftPlaceholder.setPreferredSize(new Dimension(135, 30)); 
+
+        headerPanel.setBackground(new Color(245, 245, 245));
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        ajouterLivreButton.setPreferredSize(new Dimension(140, 30));
         ajouterLivreButton.addActionListener(this);
-        supprimerLivreButton.addActionListener(this);
-        modifierLivreButton.addActionListener(this);
+        bottomPanel.add(ajouterLivreButton);
+        
+        // Use the center for the title and side panels to maintain symmetry
+        headerPanel.add(lblTitrePrincipal, BorderLayout.CENTER);
+        headerPanel.add(leftPlaceholder, BorderLayout.WEST);
+        headerPanel.add(topExtrasPanel, BorderLayout.EAST);
+        headerPanel.add(searchPanel, BorderLayout.SOUTH);
+        
+        headerPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
 
+        scrollPane.setBorder(null);
+        containerPanel.setBackground(Color.WHITE);
+        containerPanel.add(panneauLivres, BorderLayout.NORTH);
+
+        scrollPane.setViewportView(containerPanel);
+        panneauLivres.setLayout(leGrid);
+        panneauLivres.setBorder(new EmptyBorder(20, 20, 20, 20));
+        
+        panneauLivres.setBackground(Color.WHITE);
+        searchPanel.setBackground(new Color(245, 245, 245));
+        searchPanel.setBorder(new EmptyBorder(0, 10, 20, 10));
+
+        searchButton.addActionListener(this);
+        btnDeconnexion.addActionListener(this);
+        
+        searchbar.setPreferredSize(new Dimension(300, 30));
+        searchButton.setPreferredSize(new Dimension(50, 30));
+
+        searchPanel.add(searchbar);
+        searchPanel.add(searchButton);
+
+        add(headerPanel, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+
+        loadBooks("");
     }
-
+    
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == ajouterLivreButton) {
+        if (e.getSource() == searchButton) {
+            String recherche = searchbar.getText();
+            loadBooks(recherche);
+        } else if (e.getSource() == btnDeconnexion) {
+            new LivresORD().setVisible(true);
+            this.dispose();
+        } else if (e.getSource() == ajouterLivreButton) {
             new AjouterLivreFrame().setVisible(true);
             this.dispose();
-        } else if (e.getSource() == supprimerLivreButton) {
-            new SupprimerLivreFrame().setVisible(true);
-            this.dispose();
-        } else if (e.getSource() == modifierLivreButton) {
-            new ModifierLivreFrame().setVisible(true);
+        } else {
+            JButton boutonSource = (JButton) e.getSource();
+            String titreLivre = boutonSource.getName();
+            new AdminDetailsLivreFrame(titreLivre).setVisible(true);
             this.dispose();
         }
     }
 
+    private void loadBooks(String recherche) {
+        panneauLivres.removeAll();
+        String sql = "SELECT titre FROM books WHERE titre LIKE ?";
+        try (Connection conn = DatabaseHandler.connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, "%" + recherche + "%");
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                String fullTitle = rs.getString("titre");
+                JButton boutonLivres = new JButton("<html><center>" + fullTitle + "</center></html>");
+                boutonLivres.setName(fullTitle);
+                
+                boutonLivres.setPreferredSize(new Dimension(180, 250));
+                boutonLivres.setBackground(Color.WHITE);
+                boutonLivres.setFont(new Font("Serif", Font.PLAIN, 16));
+                boutonLivres.setFocusPainted(false);
+                boutonLivres.setBorder(new LineBorder(new Color(220, 220, 220), 1));
+                
+                boutonLivres.addActionListener(this);
+                panneauLivres.add(boutonLivres);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        panneauLivres.revalidate();
+        panneauLivres.repaint();
+    }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new VueBibliothecaire().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            VueBibliothecaire vue = new VueBibliothecaire();
+            vue.setVisible(true);
+        });
     }
 }
