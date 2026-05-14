@@ -130,6 +130,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
                 txtInsertionAnnee.setText("");
                 txtNombreDePages.setText("");
                 txtQuantite.setText("");
+                btnImporterImage.setEnabled(true); // Réactiver le bouton d'importation pour une nouvelle entrée
             } else if (command.equals("Valider")) {
                 titreValide = anneeValide = nomValide = nombreDePagesValide = true;
 
@@ -261,6 +262,9 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
                 // Sauvegarder automatiquement
                 ImageIO.write(image, extension, fileToSave);
                 JOptionPane.showMessageDialog(this, "Image copiée dans /images/" + fileTitle + "." + extension, "Succès", JOptionPane.INFORMATION_MESSAGE);
+
+                // Désactiver le bouton d'importation après une importation réussie
+                btnImporterImage.setEnabled(false);
                 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Erreur lors du traitement de l'image: " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
