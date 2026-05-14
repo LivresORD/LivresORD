@@ -11,7 +11,8 @@ public class AdminDetailsLivreFrame extends JFrame implements ActionListener {
     private JLabel pagesLabel;
     private JLabel quantiteLabel;
     private JButton boutonRetour;
-    private JButton emprunterButton;
+    private JButton boutonModifier;
+    private JButton boutonSupprimer;
     private String titreLivre;
     private int quantiteDisponible;
 
@@ -57,17 +58,21 @@ public class AdminDetailsLivreFrame extends JFrame implements ActionListener {
         buttonPanel.setBackground(new Color(245, 245, 245));
         buttonPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.LIGHT_GRAY));
 
-        emprunterButton = new JButton("Emprunter ce livre");
-        emprunterButton.setPreferredSize(new Dimension(180, 35));
-        emprunterButton.addActionListener(this);
 
         boutonRetour = new JButton("Retour");
         boutonRetour.setPreferredSize(new Dimension(120, 35));
         boutonRetour.addActionListener(this);
 
-        
+        boutonModifier = new JButton("Modifier");
+        boutonModifier.setPreferredSize(new Dimension(120, 35));
+        boutonModifier.addActionListener(this);
+
         buttonPanel.add(boutonRetour);
-        buttonPanel.add(emprunterButton);
+        buttonPanel.add(boutonModifier);
+        boutonSupprimer = new JButton("Supprimer");
+        boutonSupprimer.setPreferredSize(new Dimension(120, 35));
+        boutonSupprimer.addActionListener(this);
+        buttonPanel.add(boutonSupprimer);
 
         // Adding Panels to Frame
         add(headerPanel, BorderLayout.NORTH);
@@ -115,6 +120,43 @@ public class AdminDetailsLivreFrame extends JFrame implements ActionListener {
         if (e.getSource() == boutonRetour) {
             new VueBibliothecaire().setVisible(true);
             this.dispose();
+        }
+        if (e.getSource() == boutonModifier) {
+            new ModifierLivreFrame().setVisible(true);
+            this.dispose();
+        }
+        if (e.getSource() == boutonSupprimer) {
+            String[] options = {"Oui", "Non"};
+            int option = JOptionPane.showOptionDialog(
+                null,
+                "Voulez-vous continuer ?",
+                "Confirmation",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options, // Texte personnalisé
+                options[0] // Bouton par défaut
+            );            
+            if (option == JOptionPane.YES_OPTION) {
+                deleteBook();
+            }
+        }
+    }
+    public void deleteBook() {
+        String sql = "DELETE FROM books WHERE titre = ?";
+        try (Connection conn = DatabaseHandler.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, titreLivre);
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                JOptionPane.showMessageDialog(this, "Livre supprimé avec succès.");
+                new VueBibliothecaire().setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Erreur: Livre non trouvé.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur SQL: " + e.getMessage());
         }
     }
 }

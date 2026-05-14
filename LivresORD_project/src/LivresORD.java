@@ -16,7 +16,7 @@ public class LivresORD extends JFrame implements ActionListener {
     private JPanel loginPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
     private JButton signUpButton = new JButton("S'inscrire");
     private JButton loginButton = new JButton("Se connecter");
-    private ImageIcon imageIcon = new ImageIcon("src/images/user.jpg");
+    private ImageIcon imageIcon = new ImageIcon("images/user.jpg");
 
     // New Header Panel for styling consistency
     private JPanel headerPanel = new JPanel(new BorderLayout());
