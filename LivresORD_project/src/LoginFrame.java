@@ -5,44 +5,76 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 public class LoginFrame extends JFrame implements ActionListener {
     private JLabel usernameLabel = new JLabel("Nom d'utilisateur:");
     private JLabel passwordLabel = new JLabel("Mot de passe:");
-    private JPanel userPanel = new JPanel();
-    private JPanel passwordPanel = new JPanel();
+    private JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    private JPanel passwordPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     private JTextField usernameField = new JTextField(20);
     private JPasswordField passwordField = new JPasswordField(20);
     private JButton loginButton = new JButton("Se connecter");
     private JButton retourButton = new JButton("Retour");
-    private JPanel buttonPanel = new JPanel();
+    
+    // New UI Panels for styling consistency
+    private JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+    private JPanel headerPanel = new JPanel(new BorderLayout());
     private String sql;
 
     public LoginFrame() {
         super("Se connecter");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
+        setSize(450, 350);
         setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+        getContentPane().setBackground(Color.WHITE);
 
-        retourButton.addActionListener(this);
-        loginButton.addActionListener(this);
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 1));
+        // Header Styling
+        headerPanel.setBackground(new Color(245, 245, 245));
+        headerPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
+        JLabel headerTitle = new JLabel("Connexion");
+        headerTitle.setFont(new Font("Serif", Font.BOLD, 24));
+        headerTitle.setHorizontalAlignment(JLabel.CENTER);
+        headerTitle.setBorder(new EmptyBorder(20, 0, 20, 0));
+        headerPanel.add(headerTitle, BorderLayout.CENTER);
+
+        // Main Form Container
+        JPanel mainContainer = new JPanel();
+        mainContainer.setLayout(new GridLayout(2, 1, 0, 10));
+        mainContainer.setBackground(Color.WHITE);
+        mainContainer.setBorder(new EmptyBorder(30, 40, 30, 40));
+
+        userPanel.setBackground(Color.WHITE);
+        passwordPanel.setBackground(Color.WHITE);
+
         userPanel.add(usernameLabel);
         userPanel.add(usernameField);
         passwordPanel.add(passwordLabel);
         passwordPanel.add(passwordField);
-        panel.add(userPanel);
-        panel.add(passwordPanel);
+
+        mainContainer.add(userPanel);
+        mainContainer.add(passwordPanel);
+
+        // Button Panel Styling
+        buttonPanel.setBackground(new Color(245, 245, 245));
+        buttonPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.LIGHT_GRAY));
+        
+        loginButton.setPreferredSize(new Dimension(130, 35));
+        retourButton.setPreferredSize(new Dimension(100, 35));
+
         buttonPanel.add(retourButton);
         buttonPanel.add(loginButton);
-        panel.add(buttonPanel);
-        
 
-        add(panel);
+        // Adding Panels to Frame
+        add(headerPanel, BorderLayout.NORTH);
+        add(mainContainer, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
 
-            
+        retourButton.addActionListener(this);
+        loginButton.addActionListener(this);
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == retourButton) {
@@ -69,6 +101,7 @@ public class LoginFrame extends JFrame implements ActionListener {
             }
         }
     }
+
     private boolean validateLogin(String username, String password) {
         if (CurrentUser.getRole() == null) {
             JOptionPane.showMessageDialog(this, "Erreur: Aucun rôle sélectionné.");
@@ -87,8 +120,6 @@ public class LoginFrame extends JFrame implements ActionListener {
             pstmt.setString(2, password);
             
             ResultSet rs = pstmt.executeQuery();
-            
-            // If rs.next() is true, it means a record was found
             return rs.next();
             
         } catch (SQLException e) {

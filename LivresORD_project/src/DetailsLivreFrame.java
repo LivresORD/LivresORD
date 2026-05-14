@@ -65,8 +65,9 @@ public class DetailsLivreFrame extends JFrame implements ActionListener {
         boutonRetour.setPreferredSize(new Dimension(120, 35));
         boutonRetour.addActionListener(this);
 
-        buttonPanel.add(emprunterButton);
+        
         buttonPanel.add(boutonRetour);
+        buttonPanel.add(emprunterButton);
 
         // Adding Panels to Frame
         add(headerPanel, BorderLayout.NORTH);
