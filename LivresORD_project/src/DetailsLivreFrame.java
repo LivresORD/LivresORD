@@ -10,6 +10,7 @@ public class DetailsLivreFrame extends JFrame implements ActionListener {
     private JLabel anneeLabel;
     private JLabel pagesLabel;
     private JLabel quantiteLabel;
+    private JLabel imageLabel = new JLabel();
     private JButton boutonRetour;
     private JButton emprunterButton;
     private String titreLivre;
@@ -88,6 +89,7 @@ public class DetailsLivreFrame extends JFrame implements ActionListener {
     }
 
     private void loadBookDetails() {
+        imageLabel.setIcon(null); // Clear previous image if any
         String sql = "SELECT * FROM books WHERE titre = ?";
         try (Connection conn = DatabaseHandler.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -111,7 +113,7 @@ public class DetailsLivreFrame extends JFrame implements ActionListener {
                     ImageIcon icon = new ImageIcon(imagePath);
                     // SCALE SMALLER: 160x200 leaves room for the text at the bottom of a 180x250 button
                     Image img = icon.getImage().getScaledInstance(160, 230, Image.SCALE_SMOOTH);
-                    JLabel imageLabel = new JLabel(new ImageIcon(img));
+                    imageLabel.setIcon(new ImageIcon(img));
                     imageLabel.setHorizontalAlignment(JLabel.CENTER);
                     centerPanel.add(imageLabel);
                     centerPanel.add(textPanel);
