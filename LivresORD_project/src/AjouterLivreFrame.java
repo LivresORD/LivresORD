@@ -161,7 +161,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
 
                 try {
                     int quantite = Integer.parseInt(txtQuantite.getText());
-                    if (quantite < 0 || quantite > 1000) throw new NumberFormatException();
+                    if (quantite < 0 || quantite > 10000) throw new NumberFormatException();
                 } catch (NumberFormatException e) {
                     lblResultatFormulaire.setText("ERREUR! Quantité invalide.");
                     return;

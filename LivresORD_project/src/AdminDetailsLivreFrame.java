@@ -5,20 +5,31 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 public class AdminDetailsLivreFrame extends JFrame implements ActionListener {
-    private JLabel titreLabel;
-    private JLabel auteurLabel;
-    private JLabel anneeLabel;
-    private JLabel pagesLabel;
-    private JLabel quantiteLabel;
+    private JLabel titreLabel = new JLabel();
+    private JLabel auteurLabel = new JLabel();
+    private JLabel anneeLabel = new JLabel();
+    private JLabel pagesLabel = new JLabel();
+    private JLabel quantiteLabel = new JLabel();
+    private JLabel lblResultatFormulaire = new JLabel("", JLabel.CENTER);
+
+    private JTextField titreField = new JTextField();
+    private JTextField auteurField = new JTextField();
+    private JTextField anneeField = new JTextField();
+    private JTextField pagesField = new JTextField();
+    private JTextField quantiteField = new JTextField();
+
     private JButton boutonRetour;
     private JButton boutonModifier;
     private JButton boutonSupprimer;
     private String titreLivre;
-    private int quantiteDisponible;
+
+    private boolean isEditMode = false;
 
     // New UI Panels for better structure
     private JPanel headerPanel = new JPanel(new BorderLayout());
-    private JPanel centerPanel = new JPanel(new GridLayout(5, 1, 10, 10));
+    private JPanel textPanel = new JPanel(new GridLayout(5, 1, 10, 10));
+    private JPanel centerPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+    private JPanel centerBorderPanel = new JPanel(new BorderLayout());
     private JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
     public AdminDetailsLivreFrame(String titre) {
@@ -48,13 +59,18 @@ public class AdminDetailsLivreFrame extends JFrame implements ActionListener {
         pagesLabel = createStyledLabel();
         quantiteLabel = createStyledLabel();
 
-        centerPanel.add(titreLabel);
-        centerPanel.add(auteurLabel);
-        centerPanel.add(anneeLabel);
-        centerPanel.add(pagesLabel);
-        centerPanel.add(quantiteLabel);
+        textPanel.setBackground(Color.WHITE);
+
+        lblResultatFormulaire.setFont(new Font("SansSerif", Font.BOLD, 14));
+        lblResultatFormulaire.setForeground(Color.RED);
+        lblResultatFormulaire.setBorder(new EmptyBorder(0, 0, 10, 0));
+        centerBorderPanel.add(lblResultatFormulaire, BorderLayout.SOUTH);
+        centerBorderPanel.setBackground(Color.WHITE);
+
+        
 
         // Button Styling
+        centerBorderPanel.add(centerPanel, BorderLayout.CENTER);
         buttonPanel.setBackground(new Color(245, 245, 245));
         buttonPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.LIGHT_GRAY));
 
@@ -76,7 +92,7 @@ public class AdminDetailsLivreFrame extends JFrame implements ActionListener {
 
         // Adding Panels to Frame
         add(headerPanel, BorderLayout.NORTH);
-        add(centerPanel, BorderLayout.CENTER);
+        add(centerBorderPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
 
         loadBookDetails();
@@ -97,14 +113,33 @@ public class AdminDetailsLivreFrame extends JFrame implements ActionListener {
             pstmt.setString(1, titreLivre);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                titreLabel.setText("<html><b>Titre:</b> " + rs.getString("titre") + "</html>");
-                auteurLabel.setText("<html><b>Auteur:</b> " + rs.getString("auteur") + "</html>");
-                anneeLabel.setText("<html><b>Année:</b> " + rs.getInt("annee") + "</html>");
-                pagesLabel.setText("<html><b>Pages:</b> " + rs.getInt("nombreDePages") + "</html>");
+                titreLabel.setText("Titre: " + rs.getString("titre"));
+                auteurLabel.setText("Auteur: " + rs.getString("auteur"));
+                anneeLabel.setText("Année: " + rs.getInt("annee"));
+                pagesLabel.setText("Pages: " + rs.getInt("nombreDePages"));
+                String imageExtension = rs.getString("imageExtension");
                 
                 int qte = rs.getInt("quantiteDisponible");
-                quantiteLabel.setText("<html><b>Disponibilité:</b> " + qte + " exemplaires</html>");
-                quantiteDisponible = qte;
+                quantiteLabel.setText("Disponibilité: " + qte + " exemplaires");
+                
+
+                String imageTitle = rs.getString("titre").replaceAll("[\\\\/:*?\"<>|\\s]", "_").toLowerCase();
+                String imagePath = "images/" + imageTitle + "." + imageExtension;
+                
+                if (imagePath != null) {
+                    ImageIcon icon = new ImageIcon(imagePath);
+                    // SCALE SMALLER: 160x200 leaves room for the text at the bottom of a 180x250 button
+                    Image img = icon.getImage().getScaledInstance(160, 230, Image.SCALE_SMOOTH);
+                    JLabel imageLabel = new JLabel(new ImageIcon(img));
+                    imageLabel.setHorizontalAlignment(JLabel.CENTER);
+                    centerPanel.add(imageLabel);
+                    textPanel.add(titreLabel);
+                    textPanel.add(auteurLabel);
+                    textPanel.add(anneeLabel);
+                    textPanel.add(pagesLabel);
+                    textPanel.add(quantiteLabel);
+                    centerPanel.add(textPanel);
+                }
 
                 // Color code the availability
                 if (qte <= 0) quantiteLabel.setForeground(Color.RED);
@@ -122,8 +157,113 @@ public class AdminDetailsLivreFrame extends JFrame implements ActionListener {
             this.dispose();
         }
         if (e.getSource() == boutonModifier) {
-            new ModifierLivreFrame().setVisible(true);
-            this.dispose();
+            if (!isEditMode) {
+                // Switch to edit mode
+                titreField.setText(titreLabel.getText().replace("Titre: ", ""));
+                auteurField.setText(auteurLabel.getText().replace("Auteur: ", ""));
+                anneeField.setText(anneeLabel.getText().replace("Année: ", ""));
+                pagesField.setText(pagesLabel.getText().replace("Pages: ", ""));
+                quantiteField.setText(quantiteLabel.getText().replace("Disponibilité: ", "").replace(" exemplaires", ""));
+
+                textPanel.removeAll();
+                textPanel.add(titreField);
+                textPanel.add(auteurField);
+                textPanel.add(anneeField);
+                textPanel.add(pagesField);
+                textPanel.add(quantiteField);
+                textPanel.revalidate();
+                textPanel.repaint();
+
+                boutonModifier.setText("Enregistrer");
+                isEditMode = true;
+            } else {
+
+                if (titreField.getText().equals("")) {
+                    lblResultatFormulaire.setText("ERREUR! Titre manquant.");
+                    return;
+                }
+                if (auteurField.getText().equals("")) {
+                    lblResultatFormulaire.setText("ERREUR! Auteur manquant.");
+                    return;
+                }
+                if (anneeField.getText().equals("")) {
+                    lblResultatFormulaire.setText("ERREUR! Année manquante.");
+                    return;
+                }
+                if (pagesField.getText().equals("")) {
+                    lblResultatFormulaire.setText("ERREUR! Nombre de pages manquant.");
+                    return;
+                }
+
+                if (!auteurField.getText().matches("^[a-zA-ZÀ-ÿ\\s\\.-]+$")) {
+                    lblResultatFormulaire.setText("ERREUR! Nom de l'auteur invalide.");
+                    return;
+                }
+
+                try {
+                    int annee = Integer.parseInt(anneeField.getText());
+                    if (annee < -7000000 || annee > 2026) throw new NumberFormatException();
+                } catch (NumberFormatException ex) {
+                    lblResultatFormulaire.setText("ERREUR! Année invalide.");
+                    return;
+                }
+
+                try {
+                    int pages = Integer.parseInt(pagesField.getText());
+                    if (pages < 0 || pages > 15000) throw new NumberFormatException();
+                } catch (NumberFormatException ex) {
+                    lblResultatFormulaire.setText("ERREUR! Nombre de pages invalide.");
+                    return;
+                }
+
+                try {
+                    int quantite = Integer.parseInt(quantiteField.getText());
+                    if (quantite < 0 || quantite > 10000) throw new NumberFormatException();
+                } catch (NumberFormatException ex) {
+                    lblResultatFormulaire.setText("ERREUR! Quantité invalide.");
+                    return;
+                }
+                // 1. Prepare the SQL update
+                String sql = "UPDATE books SET titre = ?, auteur = ?, annee = ?, nombreDePages = ?, quantiteDisponible = ? WHERE titre = ?";
+                try (Connection conn = DatabaseHandler.connect();
+                    PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+                    // 2. Set the parameters from your text fields
+                    pstmt.setString(1, titreField.getText());
+                    pstmt.setString(2, auteurField.getText());
+                    pstmt.setInt(3, Integer.parseInt(anneeField.getText()));
+                    pstmt.setInt(4, Integer.parseInt(pagesField.getText()));
+                    pstmt.setInt(5, Integer.parseInt(quantiteField.getText()));
+                    pstmt.setString(6, titreLivre); // This is the old title used as the key
+
+                    int rows = pstmt.executeUpdate();
+
+                    if (rows > 0) {
+                        JOptionPane.showMessageDialog(this, "Modifications enregistrées !");
+                        
+                        // 3. Update the local key in case the title was changed
+                        titreLivre = titreField.getText();
+                        lblResultatFormulaire.setText("");
+                        
+                        // 4. Toggle the mode back
+                        isEditMode = false;
+                        boutonModifier.setText("Modifier");
+
+                        // 5. Reset the UI by clearing and reloading labels
+                        centerPanel.removeAll(); 
+                        textPanel.removeAll();
+                        loadBookDetails(); // This refills textPanel and adds it back to centerPanel
+                        
+                        this.revalidate();
+                        this.repaint();
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Erreur lors de la mise à jour.");
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Veuillez entrer des nombres valides pour l'année, les pages et la quantité.");
+                }
+            }
         }
         if (e.getSource() == boutonSupprimer) {
             String[] options = {"Oui", "Non"};
@@ -155,8 +295,8 @@ public class AdminDetailsLivreFrame extends JFrame implements ActionListener {
             } else {
                 JOptionPane.showMessageDialog(this, "Erreur: Livre non trouvé.");
             }
-        } catch (SQLException e) {
-            System.out.println("Erreur SQL: " + e.getMessage());
+        } catch (SQLException ex) {
+            System.out.println("Erreur SQL: " + ex.getMessage());
         }
     }
 }
