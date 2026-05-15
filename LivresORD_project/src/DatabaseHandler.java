@@ -28,7 +28,8 @@ public class DatabaseHandler {
                    + "auteur TEXT,"
                    + "annee INTEGER,"
                    + "nombreDePages INTEGER,"
-                   + "quantiteDisponible INTEGER);";
+                   + "quantiteDisponible INTEGER,"
+                   + "imageExtension TEXT);";
         
         String sqlEmprunts = "CREATE TABLE IF NOT EXISTS emprunts ("
                    + "id INTEGER PRIMARY KEY AUTOINCREMENT,"

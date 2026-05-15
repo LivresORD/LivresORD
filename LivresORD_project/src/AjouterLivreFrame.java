@@ -3,15 +3,15 @@
 //*******************************************************
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.io.File;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 
 public class AjouterLivreFrame extends JFrame implements ActionListener {
     private JButton btnValider = new JButton("Valider");
@@ -46,26 +46,13 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
     private JButton btnImporterImage = new JButton("Importer une image de couverture");
 
     boolean titreValide, anneeValide, nomValide, nombreDePagesValide;
+    private String imageExtension;
 
     public AjouterLivreFrame() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridLayout(9, 2));
         setResizable(false);
         setLocationRelativeTo(null);
-
-        panelDescription.setBackground(Color.GREEN);
-        panelInsertionTitre.setBackground(Color.CYAN);
-        panelInsertionAuteur.setBackground(Color.ORANGE);
-        panelInsertionAnnee.setBackground(Color.GRAY);
-        panelInsertionNombreDePages.setBackground(Color.WHITE);
-        panelInsertionQuantite.setBackground(Color.LIGHT_GRAY);
-        panelResultatFormulaire.setBackground(Color.YELLOW);
-        panelBoutons.setBackground(Color.PINK);
-
-        lblDescription.setForeground(Color.RED);
-        lblDescription.setFont(new Font("Serif", Font.BOLD, 20));
-        lblResultatFormulaire.setForeground(Color.RED);
-        lblResultatFormulaire.setFont(new Font("Serif", Font.BOLD, 12));
 
         panelDescription.setLayout(new FlowLayout(FlowLayout.CENTER));
         panelInsertionTitre.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -180,7 +167,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
                     return;
                 }
 
-				if (saveBookToDatabase(txtInsertionTitre.getText(), txtInsertionAuteur.getText(), Integer.parseInt(txtInsertionAnnee.getText()), Integer.parseInt(txtNombreDePages.getText()), Integer.parseInt(txtQuantite.getText()))) {
+				if (saveBookToDatabase(txtInsertionTitre.getText(), txtInsertionAuteur.getText(), Integer.parseInt(txtInsertionAnnee.getText()), Integer.parseInt(txtNombreDePages.getText()), Integer.parseInt(txtQuantite.getText()), imageExtension)) {
                     JOptionPane.showMessageDialog(this, "Le livre a été ajouté avec succès!", "Succès", JOptionPane.INFORMATION_MESSAGE);
                     new VueBibliothecaire().setVisible(true);
                     this.dispose();
@@ -198,8 +185,8 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
         }
     }
 
-	private boolean saveBookToDatabase(String title, String author, int year, int pages, int quantite) {
-        String sql = "INSERT INTO books(titre, auteur, annee, nombreDePages, quantiteDisponible) VALUES(?,?,?,?,?)";
+	private boolean saveBookToDatabase(String title, String author, int year, int pages, int quantite, String imageExtension) {
+        String sql = "INSERT INTO books(titre, auteur, annee, nombreDePages, quantiteDisponible, imageExtension) VALUES(?,?,?,?,?,?)";
 
         try (Connection conn = DatabaseHandler.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -209,6 +196,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
             pstmt.setInt(3, year);
             pstmt.setInt(4, pages);
             pstmt.setInt(5, quantite);
+            pstmt.setString(6, imageExtension);
             
             pstmt.executeUpdate();
             return true;
@@ -230,7 +218,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
         }
 
         // Nettoyer le titre des caractères interdits dans les noms de fichiers
-        fileTitle = fileTitle.replaceAll("[\\\\/:*?\"<>|]", "_");
+        fileTitle = fileTitle.replaceAll("[\\\\/:*?\"<>|\\s]", "_").toLowerCase();
 
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png", "bmp"));
@@ -241,7 +229,7 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
             try {
                 // Détecter l'extension d'origine
                 String originalName = selectedFile.getName();
-                String extension = originalName.substring(originalName.lastIndexOf(".") + 1).toLowerCase();
+                imageExtension = originalName.substring(originalName.lastIndexOf(".") + 1).toLowerCase();
                 
                 BufferedImage image = ImageIO.read(selectedFile);
                 
@@ -257,11 +245,11 @@ public class AjouterLivreFrame extends JFrame implements ActionListener {
                 }
                 
                 // Forcer le nouveau fichier avec le titre et l'extension dans ce dossier
-                File fileToSave = new File(destinationFolder, fileTitle + "." + extension);
+                File fileToSave = new File(destinationFolder, fileTitle + "." + imageExtension);
                 
                 // Sauvegarder automatiquement
-                ImageIO.write(image, extension, fileToSave);
-                JOptionPane.showMessageDialog(this, "Image copiée dans /images/" + fileTitle + "." + extension, "Succès", JOptionPane.INFORMATION_MESSAGE);
+                ImageIO.write(image, imageExtension, fileToSave);
+                JOptionPane.showMessageDialog(this, "Image copiée dans /images/" + fileTitle + "." + imageExtension, "Succès", JOptionPane.INFORMATION_MESSAGE);
 
                 // Désactiver le bouton d'importation après une importation réussie
                 btnImporterImage.setEnabled(false);

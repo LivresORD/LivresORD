@@ -109,7 +109,7 @@ public class VueLecteur extends JFrame implements ActionListener {
 
     private void loadBooks(String recherche) {
         panneauLivres.removeAll();
-        String sql = "SELECT titre FROM books WHERE titre LIKE ?";
+        String sql = "SELECT titre, imageExtension FROM books WHERE titre LIKE ?";
         try (Connection conn = DatabaseHandler.connect();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -118,10 +118,28 @@ public class VueLecteur extends JFrame implements ActionListener {
 
             while (rs.next()) {
                 String fullTitle = rs.getString("titre");
-                JButton boutonLivres = new JButton("<html><center>" + fullTitle + "</center></html>");
+                String imageExtension = rs.getString("imageExtension");
+                JButton boutonLivres = new JButton(fullTitle);
                 boutonLivres.setName(fullTitle);
                 
-                boutonLivres.setPreferredSize(new Dimension(180, 250));
+                // Sanitize title for filename
+                String imageTitle = fullTitle.replaceAll("[\\\\/:*?\"<>|\\s]", "_").toLowerCase();
+                String imagePath = "images/" + imageTitle + "." + imageExtension;
+                
+                if (imagePath != null) {
+                    ImageIcon icon = new ImageIcon(imagePath);
+                    // SCALE SMALLER: 160x200 leaves room for the text at the bottom of a 180x250 button
+                    Image img = icon.getImage().getScaledInstance(160, 230, Image.SCALE_SMOOTH);
+                    boutonLivres.setIcon(new ImageIcon(img));
+                    
+                    boutonLivres.setHorizontalTextPosition(SwingConstants.CENTER);
+                    boutonLivres.setVerticalTextPosition(SwingConstants.BOTTOM);
+                    // Adds space between the image and the text
+
+                    boutonLivres.setIconTextGap(10); 
+                }
+                
+                boutonLivres.setPreferredSize(new Dimension(180, 280));
                 boutonLivres.setBackground(Color.WHITE);
                 boutonLivres.setFont(new Font("Serif", Font.PLAIN, 16));
                 boutonLivres.setFocusPainted(false);

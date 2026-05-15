@@ -24,7 +24,7 @@ public class AdminDetailsLivreFrame extends JFrame implements ActionListener {
     public AdminDetailsLivreFrame(String titre) {
         this.titreLivre = titre;
         setTitle("Détails du Livre - " + titre);
-        setSize(500, 450); // Increased size for better readability
+        setSize(600, 450); // Increased size for better readability
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);

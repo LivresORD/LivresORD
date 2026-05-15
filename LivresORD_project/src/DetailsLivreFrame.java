@@ -17,13 +17,14 @@ public class DetailsLivreFrame extends JFrame implements ActionListener {
 
     // New UI Panels for better structure
     private JPanel headerPanel = new JPanel(new BorderLayout());
-    private JPanel centerPanel = new JPanel(new GridLayout(5, 1, 10, 10));
+    private JPanel centerPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+    private JPanel textPanel = new JPanel(new GridLayout(5, 1, 10, 10));
     private JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
     public DetailsLivreFrame(String titre) {
         this.titreLivre = titre;
         setTitle("Détails du Livre - " + titre);
-        setSize(500, 450); // Increased size for better readability
+        setSize(600, 450); // Increased size for better readability
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
         setLocationRelativeTo(null);
@@ -47,11 +48,12 @@ public class DetailsLivreFrame extends JFrame implements ActionListener {
         pagesLabel = createStyledLabel();
         quantiteLabel = createStyledLabel();
 
-        centerPanel.add(titreLabel);
-        centerPanel.add(auteurLabel);
-        centerPanel.add(anneeLabel);
-        centerPanel.add(pagesLabel);
-        centerPanel.add(quantiteLabel);
+        textPanel.setBackground(Color.WHITE);
+        textPanel.add(titreLabel);
+        textPanel.add(auteurLabel);
+        textPanel.add(anneeLabel);
+        textPanel.add(pagesLabel);
+        textPanel.add(quantiteLabel);
 
         // Button Styling
         buttonPanel.setBackground(new Color(245, 245, 245));
@@ -96,10 +98,24 @@ public class DetailsLivreFrame extends JFrame implements ActionListener {
                 auteurLabel.setText("<html><b>Auteur:</b> " + rs.getString("auteur") + "</html>");
                 anneeLabel.setText("<html><b>Année:</b> " + rs.getInt("annee") + "</html>");
                 pagesLabel.setText("<html><b>Pages:</b> " + rs.getInt("nombreDePages") + "</html>");
+                String imageExtension = rs.getString("imageExtension");
                 
                 int qte = rs.getInt("quantiteDisponible");
                 quantiteLabel.setText("<html><b>Disponibilité:</b> " + qte + " exemplaires</html>");
                 quantiteDisponible = qte;
+
+                String imageTitle = rs.getString("titre").replaceAll("[\\\\/:*?\"<>|\\s]", "_").toLowerCase();
+                String imagePath = "images/" + imageTitle + "." + imageExtension;
+                
+                if (imagePath != null) {
+                    ImageIcon icon = new ImageIcon(imagePath);
+                    // SCALE SMALLER: 160x200 leaves room for the text at the bottom of a 180x250 button
+                    Image img = icon.getImage().getScaledInstance(160, 230, Image.SCALE_SMOOTH);
+                    JLabel imageLabel = new JLabel(new ImageIcon(img));
+                    imageLabel.setHorizontalAlignment(JLabel.CENTER);
+                    centerPanel.add(imageLabel);
+                    centerPanel.add(textPanel);
+                }
 
                 // Color code the availability
                 if (qte <= 0) quantiteLabel.setForeground(Color.RED);
